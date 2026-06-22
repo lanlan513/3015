@@ -132,3 +132,161 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+@keyframes compass-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes compass-counter-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+.compass-slow-spin {
+  animation: compass-rotate 180s linear infinite;
+}
+
+.compass-item-counter {
+  animation: compass-counter-rotate 180s linear infinite;
+}
+
+@keyframes scroll-unroll {
+  0% {
+    transform: scaleY(0);
+    opacity: 0;
+    transform-origin: top;
+  }
+  100% {
+    transform: scaleY(1);
+    opacity: 1;
+    transform-origin: top;
+  }
+}
+
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in-left {
+  0% {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fade-in-right {
+  0% {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes timeline-draw {
+  0% {
+    stroke-dashoffset: 1000;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(194, 54, 22, 0.3), 0 0 20px rgba(194, 54, 22, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(194, 54, 22, 0.6), 0 0 40px rgba(194, 54, 22, 0.3);
+  }
+}
+
+@keyframes ink-spread {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+}
+
+.animate-scroll-unroll {
+  animation: scroll-unroll 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
+}
+
+.animate-fade-in-left {
+  animation: fade-in-left 0.8s ease-out forwards;
+}
+
+.animate-fade-in-right {
+  animation: fade-in-right 0.8s ease-out forwards;
+}
+
+.animate-timeline-draw {
+  stroke-dasharray: 1000;
+  animation: timeline-draw 3s ease-in-out forwards;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-ink-spread {
+  animation: ink-spread 1s ease-out forwards;
+}
+
+.journey-scroll-bg {
+  background: 
+    linear-gradient(180deg, rgba(245, 240, 232, 0.03) 0%, rgba(245, 240, 232, 0.06) 50%, rgba(245, 240, 232, 0.03) 100%),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 39px,
+      rgba(194, 54, 22, 0.06) 39px,
+      rgba(194, 54, 22, 0.06) 40px
+    );
+}
+
+.compass-ring {
+  background: radial-gradient(circle, transparent 30%, rgba(194, 54, 22, 0.1) 50%, transparent 70%);
+}
+
+.compass-center-gate {
+  background: radial-gradient(circle, rgba(194, 54, 22, 0.2) 0%, rgba(44, 62, 107, 0.3) 60%, transparent 100%);
+}
+
+.dimension-tab-active {
+  background: linear-gradient(180deg, rgba(194, 54, 22, 0.2) 0%, rgba(194, 54, 22, 0.05) 100%);
+  border-left: 3px solid #c23616;
+}
+
+.event-node {
+  background: radial-gradient(circle, rgba(194, 54, 22, 0.8) 0%, rgba(194, 54, 22, 0.3) 60%, transparent 100%);
+}
+
+.event-connector {
+  background: linear-gradient(180deg, rgba(194, 54, 22, 0.6) 0%, rgba(44, 62, 107, 0.3) 100%);
+}
