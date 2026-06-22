@@ -73,3 +73,62 @@ body {
   50% { opacity: 1; }
   100% { opacity: 1; transform: scaleY(1); }
 }
+
+.ink-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.ink-reveal.ink-reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ink-timeline-node {
+  animation: inkNodePulse 2s ease-in-out infinite;
+}
+@keyframes inkNodePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(194, 54, 22, 0.3); }
+  50% { box-shadow: 0 0 0 6px rgba(194, 54, 22, 0); }
+}
+
+.ink-battle-card {
+  position: relative;
+}
+.ink-battle-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(194, 54, 22, 0.08), transparent 70%);
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+.ink-battle-card:hover::before {
+  opacity: 1;
+}
+
+.ink-wave-bg {
+  background: linear-gradient(180deg, rgba(26, 26, 46, 0) 0%, rgba(44, 62, 107, 0.05) 50%, rgba(26, 26, 46, 0) 100%);
+}
+.ink-wave-path {
+  animation: inkWaveDrift 8s ease-in-out infinite alternate;
+}
+.ink-wave-path-delay {
+  animation-delay: -3s;
+  animation-duration: 10s;
+}
+@keyframes inkWaveDrift {
+  0% { transform: translateX(-20px) scaleY(1); }
+  50% { transform: translateX(10px) scaleY(1.1); }
+  100% { transform: translateX(20px) scaleY(0.95); }
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

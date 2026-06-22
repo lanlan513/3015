@@ -5,6 +5,7 @@ import Characters from "@/pages/Characters";
 import MartialArts from "@/pages/MartialArts";
 import Sects from "@/pages/Sects";
 import Stories from "@/pages/Stories";
+import Chronicle from "@/pages/Chronicle";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -24,6 +25,7 @@ export default function App() {
         <Route path="/martial-arts" element={<MartialArts />} />
         <Route path="/sects" element={<Sects />} />
         <Route path="/stories" element={<Stories />} />
+        <Route path="/chronicle" element={<Chronicle />} />
       </Routes>
     </Router>
   );

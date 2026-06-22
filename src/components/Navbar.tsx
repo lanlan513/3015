@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Users, Swords, Landmark, BookOpen, Menu, X } from "lucide-react";
+import { Users, Swords, Landmark, BookOpen, Menu, X, Clock } from "lucide-react";
 
 const navLinks = [
   { to: "/characters", label: "人物", icon: Users },
   { to: "/martial-arts", label: "武功", icon: Swords },
   { to: "/sects", label: "门派", icon: Landmark },
   { to: "/stories", label: "剧情", icon: BookOpen },
+  { to: "/chronicle", label: "编年史", icon: Clock },
 ];
 
 export default function Navbar() {
