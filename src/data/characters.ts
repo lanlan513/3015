@@ -1,3 +1,134 @@
+export type DestinyFateType =
+  | "loneStar"
+  | "loveTribulation"
+  | "heroBacklash"
+  | "adverseGrowth"
+  | "heavenBlessing"
+  | "powerVortex"
+  | "karmaCycle"
+  | "wanderingFree";
+
+export interface DestinyFate {
+  type: DestinyFateType;
+  name: string;
+  icon: string;
+  color: string;
+  bgColor: string;
+  borderColor: string;
+  glowColor: string;
+  description: string;
+  storyTendency: string;
+  relationEvolution: string;
+  keywords: string[];
+}
+
+export const destinyFates: Record<DestinyFateType, DestinyFate> = {
+  loneStar: {
+    type: "loneStar",
+    name: "孤星命",
+    icon: "⭐",
+    color: "#6366f1",
+    bgColor: "rgba(99,102,241,0.1)",
+    borderColor: "rgba(99,102,241,0.5)",
+    glowColor: "rgba(99,102,241,0.3)",
+    description: "天煞孤星，亲近之人多遭劫难，注定独步天下。",
+    storyTendency: "故事多围绕孤独、失去、独自承担展开，身边人常因他/她而陷入险境。",
+    relationEvolution: "与任何人建立深厚关系都伴随着悲剧风险，挚友、爱人往往结局凄凉。",
+    keywords: ["孤独", "克亲", "独行者", "悲剧英雄"],
+  },
+  loveTribulation: {
+    type: "loveTribulation",
+    name: "情劫命",
+    icon: "💔",
+    color: "#ec4899",
+    bgColor: "rgba(236,72,153,0.1)",
+    borderColor: "rgba(236,72,153,0.5)",
+    glowColor: "rgba(236,72,153,0.3)",
+    description: "情关难渡，每段感情皆是渡劫，爱而不得或得而复失。",
+    storyTendency: "感情线贯穿始终，为爱而生、为爱而死，情缘纠葛是命运主线。",
+    relationEvolution: "每段感情都充满考验：误会、分离、生死、牺牲，有情人终难成眷属。",
+    keywords: ["痴情", "虐恋", "为爱牺牲", "情关"],
+  },
+  heroBacklash: {
+    type: "heroBacklash",
+    name: "侠道反噬",
+    icon: "⚔️",
+    color: "#dc2626",
+    bgColor: "rgba(220,38,38,0.1)",
+    borderColor: "rgba(220,38,38,0.5)",
+    glowColor: "rgba(220,38,38,0.3)",
+    description: "行侠仗义却反遭其害，好人未必有好报，道义与结局背道而驰。",
+    storyTendency: "坚守道义却被世人误解、背叛、迫害，英雄末路是宿命。",
+    relationEvolution: "以德报怨换来恩将仇报，信任之人反戈一击，挚友成敌。",
+    keywords: ["忠义", "被背叛", "英雄末路", "恩将仇报"],
+  },
+  adverseGrowth: {
+    type: "adverseGrowth",
+    name: "逆缘生长",
+    icon: "🌱",
+    color: "#10b981",
+    bgColor: "rgba(16,185,129,0.1)",
+    borderColor: "rgba(16,185,129,0.5)",
+    glowColor: "rgba(16,185,129,0.3)",
+    description: "逆境中生长，每一次劫难都是蜕变之机，越挫越强。",
+    storyTendency: "命运多舛却总能绝处逢生，苦难是成长的催化剂，失即是得。",
+    relationEvolution: "从被轻视到被仰望，昔日仇人变贵人，旧识因成长而重新认识。",
+    keywords: ["逆袭", "绝处逢生", "化茧成蝶", "越挫越强"],
+  },
+  heavenBlessing: {
+    type: "heavenBlessing",
+    name: "天眷命格",
+    icon: "☀️",
+    color: "#f59e0b",
+    bgColor: "rgba(245,158,11,0.1)",
+    borderColor: "rgba(245,158,11,0.5)",
+    glowColor: "rgba(245,158,11,0.3)",
+    description: "福星高照，遇难呈祥，总有贵人相助，运气远超常人。",
+    storyTendency: "机缘巧合不断，每次身陷险境都有意外转机，奇遇连连。",
+    relationEvolution: "贵人如云，朋友遍天下，仇敌也会化敌为友，人缘极佳。",
+    keywords: ["好运", "奇遇", "贵人", "逢凶化吉"],
+  },
+  powerVortex: {
+    type: "powerVortex",
+    name: "权欲旋涡",
+    icon: "👑",
+    color: "#7c3aed",
+    bgColor: "rgba(124,58,237,0.1)",
+    borderColor: "rgba(124,58,237,0.5)",
+    glowColor: "rgba(124,58,237,0.3)",
+    description: "深陷权力斗争，成王败寇，身不由己，高处不胜寒。",
+    storyTendency: "围绕权力、地位、阴谋展开，每一步都是棋局，每个人都是棋子。",
+    relationEvolution: "因权而聚因权而散，盟友随时反目，亲人亦可牺牲。",
+    keywords: ["权谋", "阴谋", "成王败寇", "孤家寡人"],
+  },
+  karmaCycle: {
+    type: "karmaCycle",
+    name: "因果轮回",
+    icon: "♻️",
+    color: "#0ea5e9",
+    bgColor: "rgba(14,165,233,0.1)",
+    borderColor: "rgba(14,165,233,0.5)",
+    glowColor: "rgba(14,165,233,0.3)",
+    description: "前世今生因果相续，冤冤相报何时了，宿命难逃。",
+    storyTendency: "上一代恩怨延续到下一代，复仇与报恩的循环，命运的闭环。",
+    relationEvolution: "仇人之子与仇人之女相爱，宿命中的爱恨交织，恩恩怨怨纠缠不清。",
+    keywords: ["宿命", "复仇", "报恩", "轮回"],
+  },
+  wanderingFree: {
+    type: "wanderingFree",
+    name: "逍遥弃世",
+    icon: "🍃",
+    color: "#14b8a6",
+    bgColor: "rgba(20,184,166,0.1)",
+    borderColor: "rgba(20,184,166,0.5)",
+    glowColor: "rgba(20,184,166,0.3)",
+    description: "看破红尘，弃天下如敝履，逍遥自在，不问世事。",
+    storyTendency: "从入世到出世，历经繁华终归平淡，归隐是最终归宿。",
+    relationEvolution: "从人情牵绊中抽身，告别江湖与故人，相忘于江湖。",
+    keywords: ["归隐", "淡泊", "逍遥", "出世"],
+  },
+};
+
 export interface TimelineEvent {
   title: string;
   description: string;
@@ -71,6 +202,7 @@ export interface Character {
   martialArts: string[];
   quote: string;
   image: string;
+  destinyFate: DestinyFateType;
   journey: CharacterJourney;
   destinyForks?: DestinyFork[];
   perspectives?: CharacterPerspectives;
@@ -86,6 +218,7 @@ export const characters: Character[] = [
     martialArts: ["降龙十八掌", "打狗棒法"],
     quote: "我乔峰大好男儿，何惧之有！",
     image: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Qiao%20Feng%20from%20Demi-Gods%20and%20Semi-Devils%20wuxia%20hero%20ink%20wash%20painting%20style&image_size=portrait_4_3",
+    destinyFate: "loneStar",
     journey: {
       origin: [
         { title: "契丹血脉", description: "生于辽国萧氏贵族，生父萧远山为契丹珊军总教头，母亲为汉人", age: "襁褓", location: "雁门关外" },
@@ -290,6 +423,7 @@ export const characters: Character[] = [
     martialArts: ["降龙十八掌", "九阴真经"],
     quote: "侠之大者，为国为民。",
     image: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Guo%20Jing%20from%20The%20Legend%20of%20the%20Condor%20Heroes%20wuxia%20hero%20ink%20wash%20painting%20style&image_size=portrait_4_3",
+    destinyFate: "heroBacklash",
     journey: {
       origin: [
         { title: "牛家村遗孤", description: "父亲郭啸天为梁山好汉郭盛后人，被段天德杀害，母亲李萍逃亡大漠", age: "未出生", location: "临安牛家村" },
@@ -495,6 +629,7 @@ export const characters: Character[] = [
     martialArts: ["黯然销魂掌", "玄铁剑法"],
     quote: "风陵渡口初相遇，一见杨过误终身。",
     image: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Yang%20Guo%20from%20The%20Return%20of%20the%20Condor%20Heroes%20wuxia%20hero%20ink%20wash%20painting%20style&image_size=portrait_4_3",
+    destinyFate: "adverseGrowth",
     journey: {
       origin: [
         { title: "父母双亡", description: "父亲杨康死于嘉兴铁枪庙，母亲穆念慈生下他后不久染病去世，成为孤儿", age: "襁褓", location: "嘉兴" },
@@ -698,6 +833,7 @@ export const characters: Character[] = [
     martialArts: ["独孤九剑", "易筋经"],
     quote: "行云流水，任意所至。",
     image: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Linghu%20Chong%20from%20The%20Smiling%20Proud%20Wanderer%20wuxia%20hero%20ink%20wash%20painting%20style&image_size=portrait_4_3",
+    destinyFate: "wanderingFree",
     journey: {
       origin: [
         { title: "孤儿出身", description: "自幼父母双亡，被华山派掌门岳不群夫妇收养，视为己出", age: "襁褓", location: "不详" },
@@ -860,6 +996,7 @@ export const characters: Character[] = [
     martialArts: ["九阳神功", "乾坤大挪移", "太极剑法"],
     quote: "我这一生，总是犹疑不决，辜负了许多人。",
     image: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Zhang%20Wuji%20from%20The%20Heaven%20Sword%20and%20Dragon%20Saber%20wuxia%20hero%20ink%20wash%20painting%20style&image_size=portrait_4_3",
+    destinyFate: "loveTribulation",
     journey: {
       origin: [
         { title: "冰火岛降生", description: "张翠山与殷素素流落冰火岛，在岛上生下张无忌，谢逊收为义子", age: "出生", location: "冰火岛" },
@@ -1022,6 +1159,7 @@ export const characters: Character[] = [
     martialArts: ["六脉神剑", "北冥神功", "凌波微步"],
     quote: "神仙姐姐，我段誉对你一片真心！",
     image: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Duan%20Yu%20from%20Demi-Gods%20and%20Semi-Devils%20wuxia%20prince%20ink%20wash%20painting%20style&image_size=portrait_4_3",
+    destinyFate: "heavenBlessing",
     journey: {
       origin: [
         { title: "大理世子", description: "大理国王段正淳之子（实为段延庆之子），生于帝王之家，自幼锦衣玉食", age: "出生", location: "大理皇宫" },
@@ -1101,6 +1239,7 @@ export const characters: Character[] = [
     martialArts: ["打狗棒法", "落英神剑掌"],
     quote: "靖哥哥，我只愿与你生死相随。",
     image: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Huang%20Rong%20from%20The%20Legend%20of%20the%20Condor%20Heroes%20wuxia%20heroine%20ink%20wash%20painting%20style&image_size=portrait_4_3",
+    destinyFate: "heavenBlessing",
     journey: {
       origin: [
         { title: "桃花岛千金", description: "东邪黄药师独女，自幼丧母，在桃花岛长大，备受父亲宠爱", age: "出生", location: "桃花岛" },
@@ -1179,6 +1318,7 @@ export const characters: Character[] = [
     martialArts: ["玉女心经", "古墓派轻功"],
     quote: "过儿，我在这里等你，不管多久。",
     image: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Xiaolongnu%20from%20The%20Return%20of%20the%20Condor%20Heroes%20wuxia%20heroine%20ink%20wash%20painting%20style&image_size=portrait_4_3",
+    destinyFate: "loveTribulation",
     journey: {
       origin: [
         { title: "古墓孤儿", description: "不知父母是谁，自幼被古墓派林朝英的侍女收养，在古墓中长大", age: "襁褓", location: "终南山古墓" },
@@ -1258,6 +1398,7 @@ export const characters: Character[] = [
     martialArts: ["神行百变"],
     quote: "我对你的敬仰犹如滔滔江水连绵不绝！",
     image: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Wei%20Xiaobao%20from%20The%20Deer%20and%20the%20Cauldron%20wuxia%20trickster%20ink%20wash%20painting%20style&image_size=portrait_4_3",
+    destinyFate: "heavenBlessing",
     journey: {
       origin: [
         { title: "扬州丽春院", description: "母亲韦春花是扬州丽春院妓女，不知生父是谁，在妓院中长大", age: "出生", location: "扬州丽春院" },
@@ -1337,6 +1478,7 @@ export const characters: Character[] = [
     martialArts: ["日月神教武功"],
     quote: "我若不能与你在一起，纵有天下又有何用？",
     image: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Ren%20Yingying%20from%20The%20Smiling%20Proud%20Wanderer%20wuxia%20heroine%20ink%20wash%20painting%20style&image_size=portrait_4_3",
+    destinyFate: "karmaCycle",
     journey: {
       origin: [
         { title: "魔教千金", description: "日月神教教主任我行独女，自幼在黑木崖长大，身份尊贵", age: "出生", location: "黑木崖" },

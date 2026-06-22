@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { Character, CharacterJourney, TimelineEvent, PerspectiveType, PerspectiveEvent } from "@/data/characters";
-import { ArrowLeft, Sparkles, Heart, Swords, Scroll as ScrollIcon, Star, X, GitBranch, Users, Eye, Shield, BookOpen } from "lucide-react";
+import { Character, CharacterJourney, TimelineEvent, PerspectiveType, PerspectiveEvent, destinyFates } from "@/data/characters";
+import { ArrowLeft, Sparkles, Heart, Swords, Scroll as ScrollIcon, Star, X, GitBranch, Users, Eye, Shield, BookOpen, Zap } from "lucide-react";
 import DestinyForkTree from "@/components/DestinyForkTree";
 
 interface DestinyScrollProps {
@@ -8,7 +8,7 @@ interface DestinyScrollProps {
   onBack: () => void;
 }
 
-type DimensionKey = keyof CharacterJourney | "forks" | "perspectives";
+type DimensionKey = keyof CharacterJourney | "forks" | "perspectives" | "fate";
 
 const perspectives: {
   key: PerspectiveType;
@@ -31,6 +31,7 @@ const dimensions: {
   icon: typeof Sparkles;
   description: string;
 }[] = [
+  { key: "fate", label: "命格", icon: Zap, description: "宿命倾向" },
   { key: "origin", label: "出身", icon: Star, description: "家世渊源" },
   { key: "destiny", label: "机缘", icon: Sparkles, description: "命运轮转" },
   { key: "emotion", label: "情感", icon: Heart, description: "爱恨纠缠" },
@@ -156,7 +157,7 @@ function PerspectiveNode({ event, index, total, color }: { event: PerspectiveEve
 }
 
 export default function DestinyScroll({ character, onBack }: DestinyScrollProps) {
-  const [activeDimension, setActiveDimension] = useState<DimensionKey>("origin");
+  const [activeDimension, setActiveDimension] = useState<DimensionKey>("fate");
   const [activePerspective, setActivePerspective] = useState<PerspectiveType>("bystander");
   const [pageKey, setPageKey] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -171,10 +172,14 @@ export default function DestinyScroll({ character, onBack }: DestinyScrollProps)
   const currentDim = dimensions.find((d) => d.key === activeDimension)!;
   const isForkDimension = activeDimension === "forks";
   const isPerspectiveDimension = activeDimension === "perspectives";
-  const events = isForkDimension || isPerspectiveDimension ? [] : character.journey[activeDimension as keyof CharacterJourney];
+  const isFateDimension = activeDimension === "fate";
+  const events = isForkDimension || isPerspectiveDimension || isFateDimension
+    ? []
+    : character.journey[activeDimension as keyof CharacterJourney];
   const Icon = currentDim.icon;
   const currentPerspective = character.perspectives ? character.perspectives[activePerspective] : null;
   const perspectiveConfig = perspectives.find((p) => p.key === activePerspective)!;
+  const fate = destinyFates[character.destinyFate];
 
   return (
     <div className="min-h-screen py-8 md:py-12 px-2 md:px-4 relative">
@@ -248,7 +253,7 @@ export default function DestinyScroll({ character, onBack }: DestinyScrollProps)
                     <p className="font-song text-sm md:text-base ink-text-on-paper/75 leading-loose mb-4 max-w-2xl mx-auto md:mx-0">
                       {character.description}
                     </p>
-                    <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+                    <div className="flex flex-wrap gap-2 justify-center md:justify-start mb-3">
                       {character.martialArts.map((art) => (
                         <span
                           key={art}
@@ -257,6 +262,28 @@ export default function DestinyScroll({ character, onBack }: DestinyScrollProps)
                           ✦ {art}
                         </span>
                       ))}
+                    </div>
+                    <div
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-sm relative overflow-hidden"
+                      style={{
+                        background: destinyFates[character.destinyFate].bgColor,
+                        border: `2px solid ${destinyFates[character.destinyFate].borderColor}`,
+                      }}
+                    >
+                      <span className="text-xl md:text-2xl">
+                        {destinyFates[character.destinyFate].icon}
+                      </span>
+                      <div className="text-left">
+                        <div
+                          className="font-brush text-base md:text-lg leading-none"
+                          style={{ color: destinyFates[character.destinyFate].color }}
+                        >
+                          {destinyFates[character.destinyFate].name}
+                        </div>
+                        <div className="text-[10px] md:text-xs font-song mt-0.5 leading-none ink-text-on-paper/50">
+                          {destinyFates[character.destinyFate].keywords.slice(0, 2).join(" · ")}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -320,7 +347,150 @@ export default function DestinyScroll({ character, onBack }: DestinyScrollProps)
 
               <div className="page-turn-in overflow-hidden" key={pageKey}>
                 <div ref={contentRef} className="max-h-[60vh] overflow-y-auto pr-2 scrollbar-hide">
-                  {isForkDimension && character.destinyForks ? (
+                  {isFateDimension ? (
+                    <>
+                      <div
+                        className="p-5 md:p-6 rounded-sm relative overflow-hidden mb-6"
+                        style={{
+                          background: `linear-gradient(135deg, ${fate.bgColor}, rgba(139,90,43,0.05))`,
+                          borderLeft: `4px solid ${fate.color}`,
+                          borderTop: `1px solid ${fate.borderColor}`,
+                          borderBottom: `1px solid ${fate.borderColor}`,
+                        }}
+                      >
+                        <div className="absolute top-3 right-4 opacity-20">
+                          <Zap size={36} style={{ color: fate.color }} />
+                        </div>
+                        <div className="flex items-center gap-4 mb-4">
+                          <div
+                            className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center text-4xl md:text-5xl"
+                            style={{
+                              background: fate.bgColor,
+                              border: `3px solid ${fate.borderColor}`,
+                              boxShadow: `0 0 30px ${fate.glowColor}`,
+                            }}
+                          >
+                            {fate.icon}
+                          </div>
+                          <div>
+                            <h2
+                              className="font-brush text-4xl md:text-5xl tracking-wider mb-1"
+                              style={{ color: fate.color }}
+                            >
+                              {fate.name}
+                            </h2>
+                            <div className="font-song text-sm md:text-base ink-text-on-paper/60">
+                              ─── {character.name}的宿命注脚 ───
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          className="font-brush text-sm md:text-base tracking-widest mb-3"
+                          style={{ color: fate.color }}
+                        >
+                          ◇ 命格释义 ◇
+                        </div>
+                        <p className="font-song text-base md:text-lg leading-loose ink-text-on-paper/85">
+                          {fate.description}
+                        </p>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
+                        <div
+                          className="p-4 md:p-5 rounded-sm relative"
+                          style={{
+                            background: fate.bgColor,
+                            border: `1px solid ${fate.borderColor}40`,
+                          }}
+                        >
+                          <div className="flex items-center gap-2 mb-3">
+                            <Sparkles size={18} style={{ color: fate.color }} />
+                            <div
+                              className="font-brush text-xl md:text-2xl"
+                              style={{ color: fate.color }}
+                            >
+                              故事倾向
+                            </div>
+                          </div>
+                          <div className="w-full h-px mb-3" style={{ background: `${fate.color}30` }} />
+                          <p className="font-song text-sm md:text-base leading-relaxed ink-text-on-paper/80">
+                            {fate.storyTendency}
+                          </p>
+                        </div>
+
+                        <div
+                          className="p-4 md:p-5 rounded-sm relative"
+                          style={{
+                            background: fate.bgColor,
+                            border: `1px solid ${fate.borderColor}40`,
+                          }}
+                        >
+                          <div className="flex items-center gap-2 mb-3">
+                            <Users size={18} style={{ color: fate.color }} />
+                            <div
+                              className="font-brush text-xl md:text-2xl"
+                              style={{ color: fate.color }}
+                            >
+                              关系演化
+                            </div>
+                          </div>
+                          <div className="w-full h-px mb-3" style={{ background: `${fate.color}30` }} />
+                          <p className="font-song text-sm md:text-base leading-relaxed ink-text-on-paper/80">
+                            {fate.relationEvolution}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="mb-6">
+                        <div className="flex items-center gap-2 mb-4">
+                          <Star size={16} style={{ color: fate.color }} />
+                          <div
+                            className="font-brush text-lg md:text-xl"
+                            style={{ color: fate.color }}
+                          >
+                            命格关键词
+                          </div>
+                          <div className="flex-1 h-px" style={{ background: `${fate.color}30` }} />
+                        </div>
+                        <div className="flex flex-wrap gap-2 md:gap-3">
+                          {fate.keywords.map((kw) => (
+                            <span
+                              key={kw}
+                              className="px-4 py-2 rounded-sm font-song text-sm md:text-base"
+                              style={{
+                                background: fate.bgColor,
+                                border: `1px solid ${fate.borderColor}`,
+                                color: fate.color,
+                              }}
+                            >
+                              ✦ {kw}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div
+                        className="p-5 md:p-6 rounded-sm relative overflow-hidden"
+                        style={{
+                          background: "rgba(194,54,22,0.05)",
+                          border: "1px dashed rgba(194,54,22,0.3)",
+                        }}
+                      >
+                        <div className="absolute top-3 left-4 text-5xl md:text-6xl opacity-10 font-brush text-[#c23616]">
+                          命
+                        </div>
+                        <div className="font-brush text-xs md:text-sm tracking-widest text-[#c23616]/70 mb-2 text-center">
+                          ◇ 天 机 不 可 泄 露 ◇
+                        </div>
+                        <div className="w-32 h-px bg-gradient-to-r from-transparent via-[#c23616]/30 to-transparent mx-auto mb-4" />
+                        <p className="font-song text-sm md:text-base leading-loose ink-text-on-paper/75 text-center italic">
+                          「{character.name}」此生的故事走向，早已刻入「{fate.name}」的命格之中。
+                          翻阅下文出身、机缘、情感、武学、结局诸章，
+                          处处可见宿命之手的悄然牵引……
+                        </p>
+                      </div>
+                    </>
+                  ) : isForkDimension && character.destinyForks ? (
                     <DestinyForkTree
                       forks={character.destinyForks}
                       characterName={character.name}

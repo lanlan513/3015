@@ -1,19 +1,19 @@
-import { useState } from 'react';
-import { characters, Character } from '@/data/characters';
+import { useState, useMemo } from 'react';
+import { characters, Character, destinyFates, DestinyFateType } from '@/data/characters';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import Compass from '@/components/Compass';
 import DestinyScroll from '@/components/DestinyScroll';
 import CharacterCompare from '@/components/CharacterCompare';
-import { GitCompare, Compass as CompassIcon, X, Check, Users } from 'lucide-react';
+import { GitCompare, Compass as CompassIcon, X, Check, Users, BarChart3, Filter, Sparkles } from 'lucide-react';
 
-type ViewMode = "single" | "compare";
+type ViewMode = "single" | "compare" | "fate";
 
 export default function Characters() {
   const [viewMode, setViewMode] = useState<ViewMode>("single");
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
   const [compareFirst, setCompareFirst] = useState<Character | null>(null);
   const [compareSecond, setCompareSecond] = useState<Character | null>(null);
+  const [selectedFateTypes, setSelectedFateTypes] = useState<DestinyFateType[]>([]);
 
   if (selectedCharacter) {
     return (
@@ -53,6 +53,10 @@ export default function Characters() {
   }
 
   const handleCompassSelect = (char: Character) => {
+    if (viewMode === "fate") {
+      setSelectedCharacter(char);
+      return;
+    }
     if (viewMode === "single") {
       setSelectedCharacter(char);
     } else {
@@ -66,8 +70,29 @@ export default function Characters() {
     }
   };
 
-  const isCharSelectedForCompare = (char: Character) => {
-    return compareFirst?.id === char.id || compareSecond?.id === char.id;
+  const filteredCharacters = useMemo(() => {
+    if (selectedFateTypes.length === 0) return characters;
+    return characters.filter((c) => selectedFateTypes.includes(c.destinyFate));
+  }, [selectedFateTypes]);
+
+  const fateDistribution = useMemo(() => {
+    const dist = {} as Record<DestinyFateType, number>;
+    for (const fateType of Object.keys(destinyFates) as DestinyFateType[]) {
+      dist[fateType] = characters.filter((c) => c.destinyFate === fateType).length;
+    }
+    return dist;
+  }, []);
+
+  const toggleFateFilter = (type: DestinyFateType) => {
+    setSelectedFateTypes((prev) =>
+      prev.includes(type)
+        ? prev.filter((t) => t !== type)
+        : [...prev, type]
+    );
+  };
+
+  const clearFateFilter = () => {
+    setSelectedFateTypes([]);
   };
 
   return (
@@ -83,19 +108,21 @@ export default function Characters() {
         <div className="relative">
           <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-cinnabar/60 to-transparent mx-auto mb-6" />
           <h1 className="font-brush text-5xl md:text-6xl text-rice ink-text-glow mb-2">
-            江湖罗盘
+            {viewMode === "fate" ? "命运分类学" : "江湖罗盘"}
           </h1>
           <p className="font-song text-mist/60 mt-3 text-base md:text-lg">
             {viewMode === "single"
               ? "点击罗盘上的人物，翻阅其命运卷轴"
-              : compareFirst
-                ? `已选「${compareFirst.name}」，再选一人开启宿命对照`
-                : "选择两位人物，开启宿命对照卷轴"}
+              : viewMode === "compare"
+                ? compareFirst
+                  ? `已选「${compareFirst.name}」，再选一人开启宿命对照`
+                  : "选择两位人物，开启宿命对照卷轴"
+                : "查看江湖中各色命格分布，筛选命运分类学视角下的江湖众生相"}
           </p>
           <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-cinnabar/60 to-transparent mx-auto mt-6" />
         </div>
 
-        <div className="relative mt-6 flex justify-center gap-3">
+        <div className="relative mt-6 flex flex-wrap justify-center gap-3">
           <button
             onClick={() => {
               setViewMode("single");
@@ -125,6 +152,21 @@ export default function Characters() {
           >
             <GitCompare size={16} />
             <span className="font-brush text-base md:text-lg">宿命对照</span>
+          </button>
+          <button
+            onClick={() => {
+              setViewMode("fate");
+              setCompareFirst(null);
+              setCompareSecond(null);
+            }}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-sm transition-all duration-300 ${
+              viewMode === "fate"
+                ? "bg-indigo/20 border border-indigo/50 text-indigo-400 shadow-lg shadow-indigo/10"
+                : "bg-ink/40 border border-mist/15 text-mist/60 hover:border-indigo/30 hover:text-indigo-300/80"
+            }`}
+          >
+            <BarChart3 size={16} />
+            <span className="font-brush text-base md:text-lg">命运分类</span>
           </button>
         </div>
 
@@ -224,69 +266,352 @@ export default function Characters() {
         )}
       </section>
 
-      <section className="relative pb-12">
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,rgba(26,26,46,0.8)_100%)]" />
-        </div>
-        <CompassWithState
-          characters={characters}
-          onSelect={handleCompassSelect}
-          viewMode={viewMode}
-          compareFirst={compareFirst}
-          compareSecond={compareSecond}
+      {viewMode === "fate" ? (
+        <FateTaxonomyView
+          characters={filteredCharacters}
+          fateDistribution={fateDistribution}
+          selectedFateTypes={selectedFateTypes}
+          onToggleFate={toggleFateFilter}
+          onClearFate={clearFateFilter}
+          onSelectCharacter={(char) => setSelectedCharacter(char)}
         />
-      </section>
+      ) : (
+        <section className="relative pb-12">
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,rgba(26,26,46,0.8)_100%)]" />
+          </div>
+          <CompassWithState
+            characters={filteredCharacters}
+            onSelect={handleCompassSelect}
+            viewMode={viewMode}
+            compareFirst={compareFirst}
+            compareSecond={compareSecond}
+          />
+        </section>
+      )}
 
-      <section className="max-w-4xl mx-auto px-4 pb-20">
-        <div className="text-center mb-8">
-          <h2 className="font-brush text-2xl text-rice/80 mb-3">
-            {viewMode === "single" ? "卷轴指引" : "对照指引"}
-          </h2>
-          <div className="w-16 h-px bg-cinnabar/30 mx-auto" />
-        </div>
-        {viewMode === "single" ? (
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
-            {[
-              { label: "出身", desc: "家世渊源" },
-              { label: "机缘", desc: "命运轮转" },
-              { label: "情感", desc: "爱恨纠缠" },
-              { label: "武学", desc: "绝技留名" },
-              { label: "结局", desc: "功过留名" },
-            ].map((item, i) => (
-              <div
-                key={item.label}
-                className="ink-card p-4 text-center"
-                style={{ animationDelay: `${i * 0.1}s` }}
-              >
-                <div className="font-brush text-xl text-cinnabar mb-1">{item.label}</div>
-                <div className="font-song text-xs text-mist/60">{item.desc}</div>
-              </div>
-            ))}
+      {viewMode !== "fate" && (
+        <section className="max-w-4xl mx-auto px-4 pb-20">
+          <div className="text-center mb-8">
+            <h2 className="font-brush text-2xl text-rice/80 mb-3">
+              {viewMode === "single" ? "卷轴指引" : "对照指引"}
+            </h2>
+            <div className="w-16 h-px bg-cinnabar/30 mx-auto" />
           </div>
-        ) : (
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
-            {[
-              { label: "成长环境", desc: "出身对比" },
-              { label: "感情经历", desc: "爱恨对照" },
-              { label: "武学道路", desc: "高低相较" },
-              { label: "人生结局", desc: "归宿异同" },
-              { label: "双螺旋", desc: "命运交织" },
-            ].map((item, i) => (
-              <div
-                key={item.label}
-                className="ink-card p-4 text-center"
-                style={{ animationDelay: `${i * 0.1}s` }}
-              >
-                <div className="font-brush text-xl text-gold/80 mb-1">{item.label}</div>
-                <div className="font-song text-xs text-mist/60">{item.desc}</div>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
+          {viewMode === "single" ? (
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
+              {[
+                { label: "出身", desc: "家世渊源" },
+                { label: "机缘", desc: "命运轮转" },
+                { label: "情感", desc: "爱恨纠缠" },
+                { label: "武学", desc: "绝技留名" },
+                { label: "结局", desc: "功过留名" },
+              ].map((item, i) => (
+                <div
+                  key={item.label}
+                  className="ink-card p-4 text-center"
+                  style={{ animationDelay: `${i * 0.1}s` }}
+                >
+                  <div className="font-brush text-xl text-cinnabar mb-1">{item.label}</div>
+                  <div className="font-song text-xs text-mist/60">{item.desc}</div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
+              {[
+                { label: "成长环境", desc: "出身对比" },
+                { label: "感情经历", desc: "爱恨对照" },
+                { label: "武学道路", desc: "高低相较" },
+                { label: "人生结局", desc: "归宿异同" },
+                { label: "双螺旋", desc: "命运交织" },
+              ].map((item, i) => (
+                <div
+                  key={item.label}
+                  className="ink-card p-4 text-center"
+                  style={{ animationDelay: `${i * 0.1}s` }}
+                >
+                  <div className="font-brush text-xl text-gold/80 mb-1">{item.label}</div>
+                  <div className="font-song text-xs text-mist/60">{item.desc}</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
 
       <Footer />
     </div>
+  );
+}
+
+interface FateTaxonomyViewProps {
+  characters: Character[];
+  fateDistribution: Record<DestinyFateType, number>;
+  selectedFateTypes: DestinyFateType[];
+  onToggleFate: (type: DestinyFateType) => void;
+  onClearFate: () => void;
+  onSelectCharacter: (char: Character) => void;
+}
+
+function FateTaxonomyView({
+  characters,
+  fateDistribution,
+  selectedFateTypes,
+  onToggleFate,
+  onClearFate,
+  onSelectCharacter,
+}: FateTaxonomyViewProps) {
+  const totalCharacters = characters.length;
+  const allFateTypes = Object.keys(destinyFates) as DestinyFateType[];
+
+  return (
+    <section className="max-w-7xl mx-auto px-4 pb-20">
+      <div className="mb-8">
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <Filter size={18} className="text-indigo-400" />
+          <h3 className="font-brush text-xl text-indigo-300">命格筛选器</h3>
+          {selectedFateTypes.length > 0 && (
+            <button
+              onClick={onClearFate}
+              className="text-xs text-mist/50 hover:text-cinnabar transition-colors font-song"
+            >
+              清除筛选
+            </button>
+          )}
+        </div>
+
+        <div className="flex flex-wrap justify-center gap-2 md:gap-3">
+          {allFateTypes.map((type) => {
+            const fate = destinyFates[type];
+            const isSelected = selectedFateTypes.includes(type);
+            const count = fateDistribution[type];
+            if (count === 0) return null;
+            return (
+              <button
+                key={type}
+                onClick={() => onToggleFate(type)}
+                className={`relative flex items-center gap-2 px-4 py-3 rounded-sm transition-all duration-300 hover:-translate-y-0.5 ${
+                  isSelected ? "shadow-xl" : ""
+                }`}
+                style={{
+                  background: isSelected ? fate.bgColor : "rgba(26,26,46,0.6)",
+                  border: `2px solid ${isSelected ? fate.borderColor : "rgba(139,90,43,0.2)"}`,
+                }}
+              >
+                <div className="text-2xl md:text-3xl">{fate.icon}</div>
+                <div className="text-left">
+                  <div
+                    className="font-brush text-lg md:text-xl leading-none"
+                    style={{ color: isSelected ? fate.color : "#f5f0e8" }}
+                  >
+                    {fate.name}
+                  </div>
+                  <div
+                    className="text-[10px] md:text-xs font-song mt-0.5 leading-none"
+                    style={{ color: isSelected ? fate.color : "rgba(139,139,139,0.6)" }}
+                  >
+                    {count} 人 · {fate.keywords.slice(0, 2).join("·")}
+                  </div>
+                </div>
+                {isSelected && (
+                  <div
+                    className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full"
+                    style={{ backgroundColor: fate.color }}
+                  />
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-10">
+        {allFateTypes.map((type) => {
+          const fate = destinyFates[type];
+          const chars = characters.filter((c) => c.destinyFate === type);
+          if (chars.length === 0) return null;
+          return (
+            <div
+              key={type}
+              className="ink-card p-5 md:p-6 rounded-sm relative overflow-hidden"
+              style={{
+                borderLeft: `4px solid ${fate.color}`,
+                background: `linear-gradient(135deg, ${fate.bgColor}, rgba(26,26,46,0.6))`,
+              }}
+            >
+              <div className="absolute top-2 right-3 opacity-15">
+                <Sparkles size={32} style={{ color: fate.color }} />
+              </div>
+              <div className="flex items-start gap-3 mb-4">
+                <div
+                  className="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center text-2xl md:text-3xl"
+                  style={{
+                    background: fate.bgColor,
+                    border: `2px solid ${fate.borderColor}`,
+                  }}
+                >
+                  {fate.icon}
+                </div>
+                <div className="flex-1">
+                  <h4
+                    className="font-brush text-2xl md:text-3xl tracking-wider"
+                    style={{ color: fate.color }}
+                  >
+                    {fate.name}
+                  </h4>
+                  <div className="font-song text-xs md:text-sm text-mist/60 mt-0.5">
+                    {chars.length} 人 · 占比 {Math.round((chars.length / 10) * 100)}%
+                  </div>
+                </div>
+              </div>
+
+              <p className="font-song text-sm md:text-base text-rice/80 mb-4 leading-loose">
+                {fate.description}
+              </p>
+
+              <div className="mb-3">
+                <div className="flex items-center gap-1 mb-2">
+                  <div
+                    className="text-xs font-brush tracking-wider"
+                    style={{ color: fate.color }}
+                  >
+                    ◇ 故事倾向
+                  </div>
+                  <div className="flex-1 h-px" style={{ background: `${fate.color}30` }} />
+                </div>
+                <p className="text-xs md:text-sm text-mist/70 leading-relaxed">
+                  {fate.storyTendency}
+                </p>
+              </div>
+
+              <div className="mb-4">
+                <div className="flex items-center gap-1 mb-2">
+                  <div
+                    className="text-xs font-brush tracking-wider"
+                    style={{ color: fate.color }}
+                  >
+                    ◇ 关系演化
+                  </div>
+                  <div className="flex-1 h-px" style={{ background: `${fate.color}30` }} />
+                </div>
+                <p className="text-xs md:text-sm text-mist/70 leading-relaxed">
+                  {fate.relationEvolution}
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-1.5 mb-4">
+                {fate.keywords.map((kw) => (
+                  <span
+                    key={kw}
+                    className="text-xs px-2 py-1 rounded"
+                    style={{
+                      background: fate.bgColor,
+                      border: `1px solid ${fate.borderColor}`,
+                      color: fate.color,
+                    }}
+                  >
+                    #{kw}
+                  </span>
+                ))}
+              </div>
+
+              <div>
+                <div className="flex items-center gap-1 mb-3">
+                  <div
+                    className="text-xs font-brush tracking-wider"
+                    style={{ color: fate.color }}
+                  >
+                    ◇ 命中之人
+                  </div>
+                  <div className="flex-1 h-px" style={{ background: `${fate.color}30` }} />
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {chars.map((char) => (
+                    <div
+                      key={char.id}
+                      onClick={() => onSelectCharacter(char)}
+                      className="flex items-center gap-2 p-2 rounded cursor-pointer hover:bg-rice/5 transition-all duration-300 group"
+                    >
+                      <div
+                        className="w-10 h-10 rounded-full overflow-hidden border-2"
+                        style={{ borderColor: `${fate.color}60` }}
+                      >
+                        <img
+                          src={char.image}
+                          alt={char.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-brush text-base text-rice group-hover:text-cinnabar transition-colors truncate">
+                          {char.name}
+                        </div>
+                        <div className="font-song text-xs text-mist/50 truncate">
+                          {char.alias} · {char.novel}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="mt-10 ink-card p-6 md:p-8 rounded-sm">
+        <div className="text-center mb-6">
+          <h3 className="font-brush text-2xl md:text-3xl text-rice mb-2">江湖命格分布总览</h3>
+          <div className="w-20 h-px bg-gradient-to-r from-transparent via-indigo/40 to-transparent mx-auto mt-3" />
+          <p className="font-song text-xs md:text-sm text-mist/60 mt-2">
+            共 {totalCharacters} 位江湖人物 · {allFateTypes.filter((t) => fateDistribution[t] > 0).length} 种命格类型
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          {allFateTypes.map((type) => {
+            const fate = destinyFates[type];
+            const count = fateDistribution[type];
+            if (count === 0) return null;
+            const percentage = Math.round((count / 10) * 100);
+            return (
+              <div
+                key={type}
+                className="p-4 rounded-sm text-center"
+                style={{
+                  background: fate.bgColor,
+                  border: `1px solid ${fate.borderColor}30`,
+                }}
+              >
+                <div className="text-3xl md:text-4xl mb-2">{fate.icon}</div>
+                <div
+                  className="font-brush text-lg mb-1"
+                  style={{ color: fate.color }}
+                >
+                  {fate.name}
+                </div>
+                <div className="font-brush text-3xl md:text-4xl text-rice/90 mb-2">
+                  {count}
+                </div>
+                <div className="w-full h-2 rounded-full bg-rice/10 overflow-hidden">
+                  <div
+                    className="h-full rounded-full transition-all duration-1000"
+                    style={{
+                      width: `${percentage}%`,
+                      background: fate.color,
+                    }}
+                  />
+                </div>
+                <div className="font-song text-xs text-mist/50 mt-2">
+                  {percentage}%
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -325,6 +650,17 @@ function CompassWithState({
     if (compareSecond?.id === char.id) return "second";
     return null;
   };
+
+  if (characterCount === 0) {
+    return (
+      <div className="relative w-full h-[640px] md:h-[720px] flex items-center justify-center">
+        <div className="text-center">
+          <div className="font-brush text-3xl md:text-4xl text-mist/40 mb-4">暂无人物</div>
+          <div className="font-song text-sm text-mist/30">请选择其他命格筛选条件</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative w-full h-[640px] md:h-[720px] flex items-center justify-center">
@@ -420,6 +756,7 @@ function CompassWithState({
           const isSelected = status !== null;
           const isFirst = status === "first";
           const isSecond = status === "second";
+          const fate = destinyFates[char.destinyFate];
 
           return (
             <div
@@ -457,17 +794,16 @@ function CompassWithState({
                   )}
                 </div>
                 <div
-                  className={`absolute inset-0 rounded-full flex items-center justify-center transition-opacity duration-500 bg-cinnabar/25 backdrop-blur-[2px] pointer-events-none ${
+                  className={`absolute inset-0 rounded-full flex items-center justify-center transition-opacity duration-500 backdrop-blur-[2px] pointer-events-none ${
                     isSelected ? "opacity-0" : "opacity-0 group-hover:opacity-100"
                   }`}
+                  style={{ backgroundColor: `${fate.color}25` }}
                 >
-                  <span className="font-brush text-rice text-base md:text-xl ink-text-glow">
-                    {char.name}
-                  </span>
+                  <span className="text-2xl md:text-3xl">{fate.icon}</span>
                 </div>
-                <div className="absolute -bottom-7 left-1/2 -translate-x-1/2 whitespace-nowrap pointer-events-none">
+                <div className="absolute -bottom-9 left-1/2 -translate-x-1/2 whitespace-nowrap pointer-events-none text-center">
                   <span
-                    className={`font-song text-xs md:text-sm transition-colors ${
+                    className={`font-song text-xs md:text-sm transition-colors block ${
                       isFirst
                         ? "text-cinnabar font-bold"
                         : isSecond
@@ -476,6 +812,12 @@ function CompassWithState({
                     }`}
                   >
                     {char.name}
+                  </span>
+                  <span
+                    className="text-[10px] md:text-xs font-song transition-colors block mt-0.5"
+                    style={{ color: fate.color }}
+                  >
+                    {fate.icon} {fate.name}
                   </span>
                 </div>
                 <div
@@ -486,6 +828,13 @@ function CompassWithState({
                       ? "bg-indigo-400 opacity-100"
                       : "bg-cinnabar/60 opacity-0 group-hover:opacity-100"
                   }`}
+                  style={{
+                    backgroundColor: isSecond
+                      ? undefined
+                      : isFirst
+                      ? undefined
+                      : fate.color,
+                  }}
                 />
                 {isSelected && (
                   <div className="absolute inset-0 rounded-full pointer-events-none overflow-visible">
@@ -519,6 +868,17 @@ function CompassWithState({
                   <div className="w-6 h-px bg-gold/50" />
                   <span className="font-brush text-xs text-gold/60">对照</span>
                   <div className="w-6 h-px bg-gold/50" />
+                </div>
+              </>
+            ) : viewMode === "fate" ? (
+              <>
+                <div className="font-brush text-4xl md:text-5xl text-indigo-400 ink-text-glow leading-tight">
+                  命格
+                </div>
+                <div className="mt-1 flex items-center justify-center gap-1">
+                  <div className="w-6 h-px bg-indigo-400/50" />
+                  <span className="font-brush text-xs text-gold/60">分类</span>
+                  <div className="w-6 h-px bg-indigo-400/50" />
                 </div>
               </>
             ) : (
