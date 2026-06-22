@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { Character, CharacterJourney, TimelineEvent } from "@/data/characters";
-import { ArrowLeft, Sparkles, Heart, Swords, Scroll as ScrollIcon, Star, X, GitBranch } from "lucide-react";
+import { Character, CharacterJourney, TimelineEvent, PerspectiveType, PerspectiveEvent } from "@/data/characters";
+import { ArrowLeft, Sparkles, Heart, Swords, Scroll as ScrollIcon, Star, X, GitBranch, Users, Eye, Shield, BookOpen } from "lucide-react";
 import DestinyForkTree from "@/components/DestinyForkTree";
 
 interface DestinyScrollProps {
@@ -8,7 +8,22 @@ interface DestinyScrollProps {
   onBack: () => void;
 }
 
-type DimensionKey = keyof CharacterJourney | "forks";
+type DimensionKey = keyof CharacterJourney | "forks" | "perspectives";
+
+const perspectives: {
+  key: PerspectiveType;
+  label: string;
+  icon: typeof Eye;
+  description: string;
+  color: string;
+  bgColor: string;
+  borderColor: string;
+}[] = [
+  { key: "bystander", label: "旁人视角", icon: Users, description: "江湖同道眼中的他", color: "#c23616", bgColor: "rgba(194,54,22,0.08)", borderColor: "rgba(194,54,22,0.4)" },
+  { key: "enemy", label: "敌人视角", icon: Shield, description: "对手仇敌眼中的他", color: "#8b0000", bgColor: "rgba(139,0,0,0.08)", borderColor: "rgba(139,0,0,0.4)" },
+  { key: "lover", label: "爱人视角", icon: Heart, description: "挚爱之人眼中的他", color: "#c2185b", bgColor: "rgba(194,24,91,0.08)", borderColor: "rgba(194,24,91,0.4)" },
+  { key: "history", label: "史书视角", icon: BookOpen, description: "后世史书中的他", color: "#2c3e6b", bgColor: "rgba(44,62,107,0.08)", borderColor: "rgba(44,62,107,0.4)" },
+];
 
 const dimensions: {
   key: DimensionKey;
@@ -22,6 +37,7 @@ const dimensions: {
   { key: "martial", label: "武学", icon: Swords, description: "绝技留名" },
   { key: "ending", label: "结局", icon: ScrollIcon, description: "功过留名" },
   { key: "forks", label: "命运分叉", icon: GitBranch, description: "人生抉择" },
+  { key: "perspectives", label: "多视角", icon: Eye, description: "千人千面" },
 ];
 
 function ScrollRod({ position }: { position: "left" | "right" }) {
@@ -94,8 +110,54 @@ function TimelineNode({ event, index, total }: { event: TimelineEvent; index: nu
   );
 }
 
+function PerspectiveNode({ event, index, total, color }: { event: PerspectiveEvent; index: number; total: number; color: string }) {
+  const isLast = index === total - 1;
+  const isEven = index % 2 === 0;
+  return (
+    <div
+      className={`relative flex gap-3 md:gap-4 ${
+        isEven ? "animate-fade-in-left" : "animate-fade-in-right"
+      }`}
+      style={{ animationDelay: `${0.4 + index * 0.12}s`, opacity: 0 }}
+    >
+      <div className="flex flex-col items-center flex-shrink-0 pt-1">
+        <div className="relative w-5 h-5">
+          <div className="absolute inset-0 rounded-full border-2 bg-[#f5f0e8] z-10" style={{ borderColor: `${color}/50` }} />
+          <div className="absolute inset-1 rounded-full z-20" style={{ backgroundColor: color }} />
+          <div className="absolute -inset-1 rounded-full animate-ping" style={{ backgroundColor: `${color}/20`, animationDuration: "2.5s" }} />
+        </div>
+        {!isLast && (
+          <div className="w-0.5 flex-1 min-h-[70px] mt-1" style={{ background: `linear-gradient(to bottom, ${color}/50, transparent)` }} />
+        )}
+      </div>
+
+      <div className="flex-1 pb-6 min-w-0">
+        <div className="flex flex-wrap items-center gap-2 mb-1.5">
+          <h4 className="font-brush text-xl md:text-2xl tracking-wide" style={{ color }}>
+            {event.title}
+          </h4>
+          {event.age && (
+            <span className="text-[11px] md:text-xs px-2 py-0.5 rounded border font-song whitespace-nowrap" style={{ borderColor: `${color}/30`, backgroundColor: `${color}/10`, color }}>
+              {event.age}
+            </span>
+          )}
+          {event.location && (
+            <span className="text-[11px] md:text-xs px-2 py-0.5 rounded border font-song whitespace-nowrap" style={{ borderColor: `${color}/40`, backgroundColor: `${color}/10`, color }}>
+              📍 {event.location}
+            </span>
+          )}
+        </div>
+        <p className="font-song text-sm md:text-base ink-text-on-paper/80 leading-loose">
+          {event.description}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export default function DestinyScroll({ character, onBack }: DestinyScrollProps) {
   const [activeDimension, setActiveDimension] = useState<DimensionKey>("origin");
+  const [activePerspective, setActivePerspective] = useState<PerspectiveType>("bystander");
   const [pageKey, setPageKey] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -104,12 +166,15 @@ export default function DestinyScroll({ character, onBack }: DestinyScrollProps)
     if (contentRef.current) {
       contentRef.current.scrollTop = 0;
     }
-  }, [activeDimension]);
+  }, [activeDimension, activePerspective]);
 
   const currentDim = dimensions.find((d) => d.key === activeDimension)!;
   const isForkDimension = activeDimension === "forks";
-  const events = isForkDimension ? [] : character.journey[activeDimension as keyof CharacterJourney];
+  const isPerspectiveDimension = activeDimension === "perspectives";
+  const events = isForkDimension || isPerspectiveDimension ? [] : character.journey[activeDimension as keyof CharacterJourney];
   const Icon = currentDim.icon;
+  const currentPerspective = character.perspectives ? character.perspectives[activePerspective] : null;
+  const perspectiveConfig = perspectives.find((p) => p.key === activePerspective)!;
 
   return (
     <div className="min-h-screen py-8 md:py-12 px-2 md:px-4 relative">
@@ -260,6 +325,120 @@ export default function DestinyScroll({ character, onBack }: DestinyScrollProps)
                       forks={character.destinyForks}
                       characterName={character.name}
                     />
+                  ) : isPerspectiveDimension && currentPerspective ? (
+                    <>
+                      <div className="mb-6">
+                        <div className="text-center mb-4">
+                          <p className="font-brush text-lg md:text-xl text-[#8b5a2b]/70 mb-1">
+                            ◇ 江 湖 没 有 统 一 真 相 ◇
+                          </p>
+                          <div className="w-32 h-px bg-gradient-to-r from-transparent via-[#8b5a2b]/40 to-transparent mx-auto" />
+                        </div>
+
+                        <div className="flex flex-wrap gap-2 md:gap-3 justify-center mb-6">
+                          {perspectives.map((persp) => {
+                            const PIcons = persp.icon;
+                            const isActive = persp.key === activePerspective;
+                            return (
+                              <button
+                                key={persp.key}
+                                onClick={() => setActivePerspective(persp.key)}
+                                className={`relative flex items-center gap-2 px-4 md:px-5 py-2.5 md:py-3 rounded-sm transition-all duration-300 ${
+                                  isActive ? "-translate-y-0.5 shadow-lg" : "hover:-translate-y-0.5 hover:shadow-md"
+                                }`}
+                                style={{
+                                  background: isActive ? persp.bgColor : "rgba(139,90,43,0.05)",
+                                  border: `2px solid ${isActive ? persp.borderColor : "rgba(139,90,43,0.2)"}`,
+                                }}
+                              >
+                                <PIcons
+                                  size={16}
+                                  style={{ color: isActive ? persp.color : "#8b5a2b" }}
+                                />
+                                <div className="text-left">
+                                  <div
+                                    className="font-brush text-base md:text-lg leading-none"
+                                    style={{ color: isActive ? persp.color : "#32281e" }}
+                                  >
+                                    {persp.label}
+                                  </div>
+                                  <div
+                                    className="text-[10px] md:text-xs font-song mt-0.5 leading-none"
+                                    style={{ color: isActive ? `${persp.color}/70` : "rgba(50,40,30,0.5)" }}
+                                  >
+                                    {persp.description}
+                                  </div>
+                                </div>
+                                {isActive && (
+                                  <div
+                                    className="absolute -top-1 -right-1 w-2 h-2 rounded-full"
+                                    style={{ backgroundColor: persp.color }}
+                                  />
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      <div
+                        className="p-5 md:p-6 rounded-sm relative overflow-hidden mb-6"
+                        style={{
+                          background: perspectiveConfig.bgColor,
+                          borderLeft: `4px solid ${perspectiveConfig.borderColor}`,
+                          borderTop: `1px solid ${perspectiveConfig.borderColor}`,
+                          borderBottom: `1px solid ${perspectiveConfig.borderColor}`,
+                        }}
+                      >
+                        <div className="absolute top-2 right-3 opacity-20">
+                          <Eye size={28} style={{ color: perspectiveConfig.color }} />
+                        </div>
+                        <div
+                          className="font-brush text-xs md:text-sm tracking-widest mb-2"
+                          style={{ color: perspectiveConfig.color }}
+                        >
+                          ◇ {currentPerspective.overview} ◇
+                        </div>
+                        <p
+                          className="font-song text-sm md:text-base leading-loose"
+                          style={{ color: "rgba(50,40,30,0.8)" }}
+                        >
+                          {currentPerspective.description}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-3 mb-6 pb-3 border-b-2 border-double" style={{ borderColor: `${perspectiveConfig.color}/30` }}>
+                        <div
+                          className="relative w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center"
+                          style={{ background: perspectiveConfig.bgColor, border: `2px solid ${perspectiveConfig.borderColor}` }}
+                        >
+                          {(() => {
+                            const PerspIcon = perspectiveConfig.icon;
+                            return <PerspIcon size={20} style={{ color: perspectiveConfig.color }} />;
+                          })()}
+                        </div>
+                        <div>
+                          <h2 className="font-brush text-3xl md:text-4xl tracking-wider" style={{ color: perspectiveConfig.color }}>
+                            {perspectiveConfig.label}
+                          </h2>
+                          <div className="font-song text-xs md:text-sm mt-0.5" style={{ color: `${perspectiveConfig.color}/60` }}>
+                            ─── {perspectiveConfig.description} · 共 {currentPerspective.keyEvents.length} 事 ───
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-0 pl-2 md:pl-4">
+                        {currentPerspective.keyEvents.map((event, index) => (
+                          <PerspectiveNode
+                            key={`${activePerspective}-${index}-${pageKey}`}
+                            event={event}
+                            index={index}
+                            total={currentPerspective.keyEvents.length}
+                            color={perspectiveConfig.color}
+                          />
+                        ))}
+                      </div>
+                    </>
                   ) : (
                     <>
                       <div className="flex items-center gap-3 mb-6 pb-3 border-b-2 border-double border-[#8b5a2b]/30">
