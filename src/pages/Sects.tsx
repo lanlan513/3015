@@ -25,7 +25,7 @@ export default function Sects() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {sects.map((sect) => (
             <div key={sect.id} className="ink-card p-8 relative overflow-hidden">
-              <span className="absolute top-0 right-0 font-brush text-9xl text-cinnabar/3 select-none pointer-events-none">
+              <span className="absolute top-0 right-0 font-brush text-9xl text-cinnabar/3 select-none pointer-events-none -z-10">
                 {sect.id % 2 === 0 ? '门' : '派'}
               </span>
 
