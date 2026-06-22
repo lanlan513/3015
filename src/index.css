@@ -290,3 +290,228 @@ body {
 .event-connector {
   background: linear-gradient(180deg, rgba(194, 54, 22, 0.6) 0%, rgba(44, 62, 107, 0.3) 100%);
 }
+
+@keyframes scroll-left-unroll {
+  0% {
+    transform: translateX(0) scaleX(0);
+    transform-origin: right;
+    opacity: 0.4;
+  }
+  60% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(0) scaleX(1);
+    transform-origin: right;
+    opacity: 1;
+  }
+}
+
+@keyframes scroll-right-unroll {
+  0% {
+    transform: translateX(0) scaleX(0);
+    transform-origin: left;
+    opacity: 0.4;
+  }
+  60% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(0) scaleX(1);
+    transform-origin: left;
+    opacity: 1;
+  }
+}
+
+@keyframes scroll-paper-reveal {
+  0% {
+    clip-path: inset(0 50% 0 50%);
+    opacity: 0.3;
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+}
+
+@keyframes scroll-rod-left-move {
+  0% {
+    transform: translateX(50vw);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes scroll-rod-right-move {
+  0% {
+    transform: translateX(-50vw);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes page-turn-in {
+  0% {
+    transform: perspective(1500px) rotateY(-80deg);
+    transform-origin: left;
+    opacity: 0;
+  }
+  100% {
+    transform: perspective(1500px) rotateY(0deg);
+    transform-origin: left;
+    opacity: 1;
+  }
+}
+
+.scroll-left-unroll {
+  animation: scroll-left-unroll 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.scroll-right-unroll {
+  animation: scroll-right-unroll 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.scroll-paper-reveal {
+  animation: scroll-paper-reveal 1.6s cubic-bezier(0.65, 0, 0.35, 1) 0.3s both;
+}
+
+.scroll-rod-left-move {
+  animation: scroll-rod-left-move 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.scroll-rod-right-move {
+  animation: scroll-rod-right-move 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.page-turn-in {
+  animation: page-turn-in 0.9s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.scroll-rod {
+  background:
+    linear-gradient(90deg,
+      #3a2817 0%,
+      #5c3d22 15%,
+      #8b5a2b 35%,
+      #a0703a 50%,
+      #8b5a2b 65%,
+      #5c3d22 85%,
+      #3a2817 100%
+    );
+  box-shadow:
+    inset 0 2px 4px rgba(255, 220, 180, 0.2),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.4),
+    0 4px 12px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.scroll-rod-cap {
+  background:
+    radial-gradient(circle at 30% 30%, #d4a857 0%, #a07830 40%, #6b4f20 70%, #3d2a10 100%);
+  box-shadow:
+    inset 0 1px 2px rgba(255, 240, 200, 0.4),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.5),
+    0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+.scroll-paper {
+  background-color: #f5f0e8;
+  background-image:
+    radial-gradient(ellipse at 20% 30%, rgba(139, 90, 43, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 70%, rgba(139, 90, 43, 0.05) 0%, transparent 50%),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 28px,
+      rgba(139, 90, 43, 0.04) 28px,
+      rgba(139, 90, 43, 0.04) 29px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 28px,
+      rgba(139, 90, 43, 0.02) 28px,
+      rgba(139, 90, 43, 0.02) 29px
+    );
+  box-shadow:
+    inset 20px 0 40px -30px rgba(139, 90, 43, 0.3),
+    inset -20px 0 40px -30px rgba(139, 90, 43, 0.3),
+    inset 0 20px 40px -30px rgba(139, 90, 43, 0.2),
+    inset 0 -20px 40px -30px rgba(139, 90, 43, 0.2),
+    0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+.scroll-paper-edge-left {
+  background: linear-gradient(90deg,
+    rgba(139, 90, 43, 0.25) 0%,
+    rgba(139, 90, 43, 0.1) 20%,
+    rgba(139, 90, 43, 0.05) 40%,
+    transparent 100%
+  );
+}
+
+.scroll-paper-edge-right {
+  background: linear-gradient(-90deg,
+    rgba(139, 90, 43, 0.25) 0%,
+    rgba(139, 90, 43, 0.1) 20%,
+    rgba(139, 90, 43, 0.05) 40%,
+    transparent 100%
+  );
+}
+
+.scroll-paper-edge-top {
+  background: linear-gradient(180deg,
+    rgba(139, 90, 43, 0.18) 0%,
+    rgba(139, 90, 43, 0.08) 30%,
+    transparent 100%
+  );
+}
+
+.scroll-paper-edge-bottom {
+  background: linear-gradient(0deg,
+    rgba(139, 90, 43, 0.18) 0%,
+    rgba(139, 90, 43, 0.08) 30%,
+    transparent 100%
+  );
+}
+
+.ink-text-on-paper {
+  color: #2c1810;
+  text-shadow: 0 0 1px rgba(44, 24, 16, 0.1);
+}
+
+.ink-title-on-paper {
+  color: #1a0f08;
+  text-shadow: 1px 1px 2px rgba(44, 24, 16, 0.15);
+}
+
+.cinnabar-seal {
+  background: linear-gradient(135deg, #c23616 0%, #a02a10 50%, #8a2010 100%);
+  box-shadow:
+    inset 0 1px 2px rgba(255, 200, 180, 0.3),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.2),
+    0 2px 6px rgba(194, 54, 22, 0.3);
+}
+
+.dimension-pill {
+  background: linear-gradient(135deg,
+    rgba(245, 240, 232, 0.9) 0%,
+    rgba(240, 230, 218, 0.95) 100%
+  );
+  box-shadow:
+    0 2px 8px rgba(139, 90, 43, 0.15),
+    inset 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+.dimension-pill-active {
+  background: linear-gradient(135deg,
+    rgba(194, 54, 22, 0.15) 0%,
+    rgba(194, 54, 22, 0.08) 100%
+  );
+  border: 2px solid rgba(194, 54, 22, 0.6);
+  box-shadow:
+    0 4px 12px rgba(194, 54, 22, 0.2),
+    inset 0 1px 1px rgba(255, 240, 230, 0.4);
+}
