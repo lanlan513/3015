@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@200;300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-ink: #1a1a2e;
+  --color-rice: #f5f0e8;
+  --color-cinnabar: #c23616;
+  --color-indigo: #2c3e6b;
+  --color-gold: #b8860b;
+  --color-soot: #4a4a4a;
+  --color-mist: #8b8b8b;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Noto Serif SC', 'STSong', 'SimSun', serif;
+  background-color: #1a1a2e;
+  color: #f5f0e8;
+  line-height: 1.8;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a2e;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2c3e6b;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #c23616;
+}
+
+@layer components {
+  .ink-card {
+    @apply bg-ink/80 border border-mist/20 rounded-sm backdrop-blur-sm transition-all duration-500;
+  }
+  .ink-card:hover {
+    @apply border-cinnabar/40 shadow-lg shadow-cinnabar/10;
+  }
+  .ink-divider {
+    @apply h-px bg-gradient-to-r from-transparent via-mist/40 to-transparent;
+  }
+  .ink-text-glow {
+    text-shadow: 0 0 20px rgba(194, 54, 22, 0.3), 0 0 40px rgba(194, 54, 22, 0.1);
+  }
+  .ink-brush-border {
+    border-image: linear-gradient(135deg, #c23616 0%, #b8860b 50%, #2c3e6b 100%) 1;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes inkDrip {
+  0% { opacity: 0; transform: scaleY(0); }
+  50% { opacity: 1; }
+  100% { opacity: 1; transform: scaleY(1); }
+}
