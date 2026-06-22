@@ -13,6 +13,33 @@ export interface CharacterJourney {
   ending: TimelineEvent[];
 }
 
+export interface ForkOutcome {
+  title: string;
+  description: string;
+  age?: string;
+  location?: string;
+  consequence: string;
+  mood: "tragic" | "bittersweet" | "peaceful" | "glorious" | "mundane";
+}
+
+export interface ForkChoice {
+  id: string;
+  label: string;
+  isCanon: boolean;
+  summary: string;
+  outcomes: ForkOutcome[];
+}
+
+export interface DestinyFork {
+  id: string;
+  title: string;
+  description: string;
+  age?: string;
+  location?: string;
+  canonChoiceId: string;
+  choices: ForkChoice[];
+}
+
 export interface Character {
   id: number;
   name: string;
@@ -23,6 +50,7 @@ export interface Character {
   quote: string;
   image: string;
   journey: CharacterJourney;
+  destinyForks?: DestinyFork[];
 }
 
 export const characters: Character[] = [
@@ -65,6 +93,131 @@ export const characters: Character[] = [
         { title: "阿紫殉情", description: "阿紫抱着乔峰尸首跳下悬崖，游坦之随之而亡，三人同归黄土", age: "同日", location: "雁门关悬崖" },
       ],
     },
+    destinyForks: [
+      {
+        id: "qf-fork-1",
+        title: "杏子林身世揭秘",
+        description: "马夫人于杏子林大会当众揭破乔峰契丹身世，群雄哗然。此刻，乔峰面临人生第一个重大抉择——是愤然离去以证清白，还是留下面对风浪？",
+        age: "约三十岁",
+        location: "无锡杏子林",
+        canonChoiceId: "qf-fork-1-a",
+        choices: [
+          {
+            id: "qf-fork-1-a",
+            label: "交出打狗棒，黯然离去",
+            isCanon: true,
+            summary: "原著路线：乔峰不愿祸及丐帮，主动交出帮主之位，孤身调查身世真相。",
+            outcomes: [
+              { title: "孤身查案", description: "乔峰辞去帮主之位，独自追查带头大哥与杀父仇人下落", consequence: "踏上寻找真相的漫漫长路，却也因此邂逅阿朱，收获此生挚爱", mood: "bittersweet" },
+              { title: "聚贤庄血战", description: "为救阿朱，与天下英雄喝断义酒，大开杀戒", consequence: "虽救得阿朱，却与中原武林彻底决裂，从此再无回头之路", mood: "glorious" },
+              { title: "雁门关盟约", description: "阿朱在雁门关等候五日五夜，两人相约塞外牧羊", consequence: "英雄终得红颜知己，许下此生最美好的承诺", mood: "peaceful" },
+            ],
+          },
+          {
+            id: "qf-fork-1-b",
+            label: "力压群雄，据理力争",
+            isCanon: false,
+            summary: "乔峰凭借降龙十八掌震慑众人，坚持留下查清真相再作定论。",
+            outcomes: [
+              { title: "丐帮内乱", description: "乔峰以武力压服反对者，但丐帮从此人心涣散，分崩离析", consequence: "虽暂保帮主之位，却失去了帮众的信任与敬意，丐帮名存实亡", mood: "bittersweet" },
+              { title: "真假难辨", description: "乔峰留在丐帮，暗中追查，但马夫人等人步步紧逼，设下毒计", consequence: "中计误杀丐帮长老，百口莫辩，终究还是身败名裂", mood: "tragic" },
+              { title: "错失阿朱", description: "忙于丐帮事务，从未踏上寻找真相之路，与阿朱再无交集", consequence: "一生为丐帮帮主，却从未感受过人间真情，最终孤独终老", mood: "mundane" },
+            ],
+          },
+          {
+            id: "qf-fork-1-c",
+            label: "愤而出走，投奔辽国",
+            isCanon: false,
+            summary: "既然汉人不容，索性回归契丹，投奔同族，以牙还牙。",
+            outcomes: [
+              { title: "辽军大将", description: "乔峰投奔辽国，凭武功成为南院大王，率军南征", consequence: "率辽军攻破雁门关，屠戮中原，成为汉人眼中的恶魔，一生再无安宁", mood: "tragic" },
+              { title: "兄弟反目", description: "与中原群雄于战场上刀兵相见，亲手击杀昔日丐帮兄弟", consequence: "虽立下赫赫战功，却夜夜被噩梦惊醒，最终自刎于军前", mood: "tragic" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "qf-fork-2",
+        title: "青石桥上的误会",
+        description: "乔峰认定段正淳是杀父仇人，约其在小镜湖青石桥决一死战。风雨欲来之际，阿朱却在暗处得知了一个惊天秘密——",
+        age: "约三十岁",
+        location: "小镜湖青石桥",
+        canonChoiceId: "qf-fork-2-a",
+        choices: [
+          {
+            id: "qf-fork-2-a",
+            label: "依约赴战，一掌击毙",
+            isCanon: true,
+            summary: "原著路线：乔峰依约而至，以降龙十八掌击毙假扮段正淳的阿朱，铸成千古大错。",
+            outcomes: [
+              { title: "青石桥悲剧", description: "雷霆万钧的降龙十八掌击出，倒下的却是身着段正淳衣衫的阿朱", consequence: "阿朱临死含笑，托付他照顾阿紫。乔峰痛不欲生，此生再无快乐可言", mood: "tragic" },
+              { title: "追查真凶", description: "乔峰发现阿朱遗留下的段正淳手书，方知仇人另有其人", consequence: "携阿紫一路追查，终于在少室山揭开雁门关惨案的全部真相", mood: "bittersweet" },
+              { title: "雁门关殉道", description: "最终为宋辽两国和平，以断箭自尽于雁门关外", consequence: "英雄身死，换得两国数十年安宁，阿紫抱着他的尸首跳下悬崖", mood: "tragic" },
+            ],
+          },
+          {
+            id: "qf-fork-2-b",
+            label: "察觉端倪，停手追问",
+            isCanon: false,
+            summary: "乔峰察觉段正淳身形有异，收回十成功力，逼问真相。",
+            outcomes: [
+              { title: "真相大白", description: "乔峰收回掌力，阿朱在掌风中现身，道出段正淳是她生父的真相", consequence: "父女相认，乔峰与阿朱喜结连理，同赴塞外牧羊，从此不问江湖事", mood: "peaceful" },
+              { title: "白世镜之死", description: "乔峰顺藤摸瓜，揪出真正的幕后凶手白世镜与马夫人", consequence: "手刃仇人，与阿朱远赴关外，生儿育女，得以善终", mood: "peaceful" },
+            ],
+          },
+          {
+            id: "qf-fork-2-c",
+            label: "放弃私仇，远赴塞外",
+            isCanon: false,
+            summary: "阿朱劝乔峰放下仇恨，两人不赴青石桥之约，直接离开。",
+            outcomes: [
+              { title: "塞外牧羊", description: "乔峰与阿朱不告而别，在塞北草原牧马放羊，逍遥自在", consequence: "虽躲过悲剧，却一生不知杀父仇人是谁，午夜梦回时仍有遗憾", mood: "bittersweet" },
+              { title: "萧峰后裔", description: "二人育有一子一女，取名萧远山、萧流水，传承契丹血脉", consequence: "子孙后代在草原上繁衍生息，成为一代草原部族，不知中原江湖", mood: "peaceful" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "qf-fork-3",
+        title: "雁门关外的抉择",
+        description: "耶律洪基率大军南侵，乔峰于雁门关外横刀立马，直面辽帝。是为契丹尽忠，还是为汉人流血？一步之差，便是生死。",
+        age: "约三十三岁",
+        location: "雁门关",
+        canonChoiceId: "qf-fork-3-a",
+        choices: [
+          {
+            id: "qf-fork-3-a",
+            label: "胁迫辽帝，折箭为誓",
+            isCanon: true,
+            summary: "原著路线：乔峰生擒耶律洪基，逼其发誓终其一生辽兵不踏入宋境一步。",
+            outcomes: [
+              { title: "英雄末路", description: "乔峰自觉身为契丹人却胁迫国君，愧对族人，以断箭自刺胸膛", consequence: "壮烈殉道，换得宋辽两国数十年和平，万民得以休养生息", mood: "glorious" },
+              { title: "阿紫殉情", description: "阿紫抱着乔峰尸首跳下万丈悬崖，游坦之随之而亡", consequence: "三人同归黄土，只留下雁门关外的千古传说，令后人扼腕叹息", mood: "tragic" },
+            ],
+          },
+          {
+            id: "qf-fork-3-b",
+            label: "挂印封金，归隐江湖",
+            isCanon: false,
+            summary: "乔峰交还南院大王金印，辞去一切官职，飘然远去。",
+            outcomes: [
+              { title: "辽帝震怒", description: "耶律洪基大怒，下令追捕乔峰，但念及结义之情，暗中放水", consequence: "乔峰隐姓埋名，在西域一小镇开了家武馆，传授降龙十八掌与有缘人", mood: "mundane" },
+              { title: "宋辽终战", description: "失去乔峰的斡旋，三年后辽宋再度开战，生灵涂炭", consequence: "乔峰闻之叹息，却已无力回天，只能在佛前为万千亡灵超度", mood: "bittersweet" },
+            ],
+          },
+          {
+            id: "qf-fork-3-c",
+            label: "协助辽帝，挥师南下",
+            isCanon: false,
+            summary: "乔峰铭记契丹血脉，率军为先锋，攻破雁门关。",
+            outcomes: [
+              { title: "大宋灭亡", description: "乔峰率辽军势如破竹，攻破汴京，北宋亡国", consequence: "虽为契丹立下不世之功，却双手沾满汉人鲜血，被后世唾骂千年", mood: "tragic" },
+              { title: "功高震主", description: "耶律洪基忌惮乔峰兵权，设宴以毒酒赐死", consequence: "一代英雄未能战死沙场，却死于自己最信任的结义兄弟之手，可叹可叹", mood: "tragic" },
+            ],
+          },
+        ],
+      },
+    ],
   },
   {
     id: 2,
@@ -106,6 +259,132 @@ export const characters: Character[] = [
         { title: "万古流芳", description: "「侠之大者，为国为民」的精神永载江湖，成为后世武林敬仰的丰碑", age: "身后", location: "江湖" },
       ],
     },
+    destinyForks: [
+      {
+        id: "gj-fork-1",
+        title: "成吉思汗赐婚",
+        description: "郭靖随成吉思汗西征，屡建奇功，被封为「金刀驸马」，将与华筝公主成婚。此时他收到母亲李萍的信，命他南下寻找杀父仇人——",
+        age: "约二十岁",
+        location: "蒙古大营",
+        canonChoiceId: "gj-fork-1-a",
+        choices: [
+          {
+            id: "gj-fork-1-a",
+            label: "奉母命南下，辞别草原",
+            isCanon: true,
+            summary: "原著路线：郭靖谨遵母命，辞别成吉思汗与华筝，踏上南下中原之旅。",
+            outcomes: [
+              { title: "张家口初遇", description: "郭靖初入中原，在张家口遇扮作小乞丐的黄蓉，以诚相待，倾囊相助", consequence: "一见如故，开启一段江湖传奇，得黄蓉此生相伴，成为他最大的幸运", mood: "peaceful" },
+              { title: "拜师洪七公", description: "黄蓉以美食诱洪七公，郭靖得授降龙十八掌，武功大进", consequence: "从一个资质愚钝的少年，成长为可以纵横江湖的高手", mood: "glorious" },
+              { title: "华山论剑", description: "第二次华山论剑，与黄药师、洪七公各拆三百招，并列天下五绝之「北侠」", consequence: "武功冠绝天下，更重要的是领悟了「侠之大者，为国为民」的真谛", mood: "glorious" },
+            ],
+          },
+          {
+            id: "gj-fork-1-b",
+            label: "留在蒙古，与华筝成婚",
+            isCanon: false,
+            summary: "郭靖感念成吉思汗的知遇之恩，留在蒙古成为金刀驸马，辅佐铁木真。",
+            outcomes: [
+              { title: "蒙古大将", description: "郭靖与华筝成婚，成为蒙古帝国开国功臣，随铁木真横扫欧亚", consequence: "立下赫赫战功，封王拜相，但双手沾满无数无辜者的鲜血，午夜梦回，难以心安", mood: "bittersweet" },
+              { title: "母子诀别", description: "李萍见儿子不肯南下，自缢于蒙古包中，留遗书命他勿忘国仇家恨", consequence: "郭靖抱着母亲尸首嚎啕大哭，却已无法回头，从此心中再无快乐", mood: "tragic" },
+              { title: "攻宋先锋", description: "蒙古伐宋，郭靖被任命为南路军统帅，率军攻破襄阳", consequence: "亲手毁灭了自己汉人的家国，成为历史上最具争议的人物之一，名裂身后", mood: "tragic" },
+            ],
+          },
+          {
+            id: "gj-fork-1-c",
+            label: "带母亲悄然离去",
+            isCanon: false,
+            summary: "郭靖既不想背叛成吉思汗，也不愿攻宋，于是带着母亲秘密离开蒙古。",
+            outcomes: [
+              { title: "西域隐居", description: "郭靖带着李萍逃到西域昆仑山，隐姓埋名，以放牧为生", consequence: "一生未再踏足中原，也从未报过杀父之仇，临终前对郭啸天的牌位叩首请罪", mood: "mundane" },
+              { title: "追兵赶到", description: "成吉思汗发现郭靖逃走，派哲别率军追捕，李萍为掩护儿子中箭身亡", consequence: "郭靖悲愤之下与哲别恩断义绝，单人独骑冲入中原，从此性情大变，冷酷寡言", mood: "tragic" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "gj-fork-2",
+        title: "华筝与黄蓉",
+        description: "郭靖与黄蓉情根深种，却发现自己与华筝早有婚约。一边是草原旧约，一边是此生挚爱，他该如何抉择？",
+        age: "约二十岁",
+        location: "桃花岛",
+        canonChoiceId: "gj-fork-2-a",
+        choices: [
+          {
+            id: "gj-fork-2-a",
+            label: "坚守真爱，华筝成全",
+            isCanon: true,
+            summary: "原著路线：华筝深明大义，主动取消婚约，成全郭靖与黄蓉。",
+            outcomes: [
+              { title: "桃花岛大婚", description: "黄药师许亲，郭靖与黄蓉在桃花岛结为连理，夫妻情深，相守一生", consequence: "此生得黄蓉相助，无论是武功兵法，还是家国天下，都成就了一番伟业", mood: "peaceful" },
+              { title: "郭氏三姐弟", description: "婚后育有郭芙、郭襄、郭破虏一女二子，阖家欢乐", consequence: "郭襄开创峨眉派，郭芙耶律齐相守，郭破虏继承屠龙刀，各有归宿", mood: "peaceful" },
+              { title: "镇守襄阳", description: "夫妻同心，镇守襄阳数十年，抵御蒙古铁骑，鞠躬尽瘁", consequence: "襄阳城虽最终告破，但「郭大侠」之名永载史册，成为武侠精神的象征", mood: "glorious" },
+            ],
+          },
+          {
+            id: "gj-fork-2-b",
+            label: "信守旧约，迎娶华筝",
+            isCanon: false,
+            summary: "郭靖一诺千金，认为既然有婚约在先，便不能负了华筝。",
+            outcomes: [
+              { title: "黄蓉黯然离去", description: "黄蓉心痛欲绝，留书一封，飘然远去，从此绝迹江湖", consequence: "郭靖虽与华筝相敬如宾，却终生思念黄蓉，夜深时独饮苦酒，郁郁寡欢", mood: "tragic" },
+              { title: "再无北侠", description: "失去黄蓉的辅助与点化，郭靖虽武功高强，却始终未能领悟「侠之大者」", consequence: "一生镇守蒙古边境，成为一代名将，却非一代大侠，格局迥然不同", mood: "bittersweet" },
+              { title: "再见陌路", description: "三十年后，郭靖于集市偶遇黄衫女子（黄蓉之女），方知黄蓉另嫁他人，儿孙满堂", consequence: "二人擦肩而过，未发一言。郭靖归家后大病一场，不久辞世", mood: "tragic" },
+            ],
+          },
+          {
+            id: "gj-fork-2-c",
+            label: "二女共事一夫",
+            isCanon: false,
+            summary: "华筝主动提出愿与黄蓉姐妹相称，共侍郭靖。",
+            outcomes: [
+              { title: "黄药师震怒", description: "黄药师见女儿要与人共侍一夫，拂袖而去，与郭靖断绝翁婿关系", consequence: "黄蓉虽留了下来，却终生与父亲不相往来，心中有憾", mood: "bittersweet" },
+              { title: "家庭和睦", description: "华筝善骑射，黄蓉通谋略，二女一主外一主内，相安无事", consequence: "郭靖有两位贤妻相助，人生圆满，只是华筝之子与黄蓉之子为继承家产明争暗斗，家无宁日", mood: "bittersweet" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "gj-fork-3",
+        title: "襄阳城破前夜",
+        description: "蒙古大军围城十年，襄阳弹尽粮绝，城破在即。郭靖召集家人于城头，商议最后关头的去向——",
+        age: "约六七十岁",
+        location: "襄阳城头",
+        canonChoiceId: "gj-fork-3-a",
+        choices: [
+          {
+            id: "gj-fork-3-a",
+            label: "与城共存亡，以身殉国",
+            isCanon: true,
+            summary: "原著路线：郭靖黄蓉决定与襄阳共存亡，城破之日双双殉国。",
+            outcomes: [
+              { title: "城破殉国", description: "襄阳城破，郭靖黄蓉持兵刃冲下城头，与蒙古军血战至最后一刻", consequence: "夫妻二人双双战死，以身殉道，成就「侠之大者」的千古美名", mood: "glorious" },
+              { title: "倚天屠龙", description: "破城前已将倚天剑交郭襄、屠龙刀交郭破虏，兵法与秘籍藏于刀剑之中", consequence: "百余年后，刀剑秘密被揭，张无忌以武穆遗书兵法驱逐鞑虏，恢复中华，终遂郭靖遗愿", mood: "glorious" },
+            ],
+          },
+          {
+            id: "gj-fork-3-b",
+            label: "率众突围，退守蜀中",
+            isCanon: false,
+            summary: "郭靖听从黄蓉建议，趁夜率残部突围，保存实力，以图后举。",
+            outcomes: [
+              { title: "退守四川", description: "郭靖率郭家军突围至蜀地，以剑阁天险继续抵抗蒙古", consequence: "坚守蜀地十年，终因寡不敌众，病死军中，未能北定中原，含恨而终", mood: "bittersweet" },
+              { title: "子孙抗元", description: "郭靖之子郭破虏继承父志，率义军转战南北，最终战死沙场", consequence: "郭家三代抗元，满门忠烈，百年后明太祖朱元璋追封郭靖为「忠武王」", mood: "glorious" },
+            ],
+          },
+          {
+            id: "gj-fork-3-c",
+            label: "挂冠归隐，远走海外",
+            isCanon: false,
+            summary: "黄蓉劝说郭靖：天下大势已定，非人力可回，不如保全家人，远走他乡。",
+            outcomes: [
+              { title: "远走桃花岛", description: "郭靖一家连夜离开襄阳，乘船返回桃花岛，从此不问世事", consequence: "一生虽得善终，却每每遥望北方，痛哭失声。晚年著《襄阳守城录》，将毕生兵法传与后世", mood: "bittersweet" },
+              { title: "郭襄出家", description: "郭襄念念不忘杨过，又恨父亲弃襄阳军民而去，终于四十岁那年出家为尼，开创峨眉派", consequence: "父女之间隔阂至深，郭襄临终遗言，峨眉弟子永远不得踏入桃花岛一步", mood: "tragic" },
+            ],
+          },
+        ],
+      },
+    ],
   },
   {
     id: 3,
@@ -146,6 +425,131 @@ export const characters: Character[] = [
         { title: "绝迹江湖", description: "此后再无人见过神雕侠侣，唯留风陵师太念念不忘", age: "身后", location: "江湖传说" },
       ],
     },
+    destinyForks: [
+      {
+        id: "yg-fork-1",
+        title: "断臂之后",
+        description: "郭芙一剑斩断杨过右臂，杨过在血泊中醒来，剧痛与屈辱交织。是去是留？是复仇还是放下？一个被斩断的手臂，和一条被斩断的人生。",
+        age: "约二十岁",
+        location: "襄阳城外茅屋",
+        canonChoiceId: "yg-fork-1-a",
+        choices: [
+          {
+            id: "yg-fork-1-a",
+            label: "忍辱负重，独自离去",
+            isCanon: true,
+            summary: "原著路线：杨过断臂后，独自离去，偶遇神雕，入剑冢。",
+            outcomes: [
+              { title: "神雕引路", description: "杨过重伤濒死之际，神雕将他引至独孤求败剑冢，与神雕为友", consequence: "因祸得福，结识神雕，踏入剑道新境", mood: "bittersweet" },
+              { title: "玄铁重剑", description: "于剑冢中得独孤求败玄铁重剑，练就重剑无锋、大巧不工的境界", consequence: "断臂反而激发了他武学上的大彻大悟，武功更胜从前", mood: "glorious" },
+              { title: "神雕大侠", description: "携神雕行走江湖，行侠仗义，被百姓尊为「神雕侠」", consequence: "虽失一臂，却以一己之力，成就一代大侠之名", mood: "glorious" },
+            ],
+          },
+          {
+            id: "yg-fork-1-b",
+            label: "折返襄阳，手刃郭芙",
+            isCanon: false,
+            summary: "杨过怒火中烧，折返襄阳，要以郭芙之血祭奠自己的断臂。",
+            outcomes: [
+              { title: "血溅芙蓉", description: "杨过深夜潜入郭芙房中，一剑刺穿她的胸膛", consequence: "杀了郭芙，与郭靖黄蓉彻底决裂，从此再无人能约束他，心性大变，成为江湖人闻之色变的「剑魔」", mood: "tragic" },
+              { title: "追杀千里", description: "郭靖携黄蓉千里追杀杨过，终在绝情谷将其围堵", consequence: "杨过虽武功大成，却终究不是郭靖对手，被降龙十八掌震碎心脉，死于断肠崖前", mood: "tragic" },
+            ],
+          },
+          {
+            id: "yg-fork-1-c",
+            label: "废去武功，遁入空门",
+            isCanon: false,
+            summary: "杨过万念俱灰，自废武功，到少林寺出家为僧。",
+            outcomes: [
+              { title: "少林扫地", description: "杨过在少林寺扫地诵经，法号「忘尘」，不问世事", consequence: "二十年后，觉远大师圆寂，杨过继承其部分九阳神功，成为一代高僧，佛法精深，度化无数世人", mood: "peaceful" },
+              { title: "再遇故人", description: "郭襄十六岁上少林寺找杨过，二人终见最后一面，杨过赠她玄铁重剑", consequence: "郭襄携重剑下山，此后四十岁出家，开创峨眉。杨过终生未出少林寺一步，圆寂时含笑而终", mood: "bittersweet" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "yg-fork-2",
+        title: "绝情谷断肠崖",
+        description: "小龙女身中情花剧毒，无药可解。她为让杨过有活下去的希望，于断肠崖上写下「十六年后，在此重会」，纵身跃下深潭。",
+        age: "约二十岁",
+        location: "绝情谷断肠崖",
+        canonChoiceId: "yg-fork-2-a",
+        choices: [
+          {
+            id: "yg-fork-2-a",
+            label: "信守约定，苦等十六年",
+            isCanon: true,
+            summary: "原著路线：杨过信守约定，苦等小龙女一十六年，十六年之约到期才跳下。",
+            outcomes: [
+              { title: "十六年苦候", description: "杨过信守约定，在江湖上行侠仗义，将思念化作黯然销魂掌", consequence: "自创黯然销魂掌，名震江湖，行侠仗义十六年，「神雕侠」之名响彻天下", mood: "bittersweet" },
+              { title: "谷底重逢", description: "十六年之约到期，杨过于断肠崖跳下殉情，竟在绝情谷底与小龙女重逢", consequence: "有情人终成眷属，十六年的相思化作千言万语，化作一个眼神，一个拥抱", mood: "peaceful" },
+              { title: "襄阳大战", description: "杨过小龙女重出江湖，于万军之中击毙蒙古大汗蒙哥，解襄阳之围", consequence: "立下不世奇功，被推为新五绝之「西狂」，随后归隐江湖，绝迹江湖", mood: "glorious" },
+            ],
+          },
+          {
+            id: "yg-fork-2-b",
+            label: "不信鬼神，当即跳下",
+            isCanon: false,
+            summary: "杨过不相信什么十六年之约，认为小龙女已死，当即纵身跳下断肠崖。",
+            outcomes: [
+              { title: "同归于尽", description: "杨过跳下断肠崖，落入深潭，与小龙女在潭底相遇，但二人皆身受重伤", consequence: "小龙女毒性未解，杨过亦中寒毒，二人相拥着在潭底度过最后的时光，含笑而终", mood: "tragic" },
+              { title: "白鱼解毒", description: "潭中白鱼与玉蜂浆竟可解情花毒，二人得以团聚", consequence: "提前十六年重逢，但杨过未能自创黯然销魂掌，武功稍逊原著，不过夫妻相伴，何憾之有？", mood: "peaceful" },
+            ],
+          },
+          {
+            id: "yg-fork-2-c",
+            label: "不信约定，另娶他人",
+            isCanon: false,
+            summary: "杨过认定小龙女已死，十年后，在众女的追求中，选择与程英或陆无双相伴一生。",
+            outcomes: [
+              { title: "程英相伴", description: "杨过与程英结为夫妇，隐居太湖", consequence: "程英温婉贤淑，夫妻相敬如宾，但杨过心中永远有一个影子，一个不可触碰的名字。一生平淡而幸福", mood: "bittersweet" },
+              { title: "郭襄执念", description: "郭襄二十岁时仍念念不忘杨过，千山万水来找他，杨过终于被她的痴情感动", consequence: "杨过在小龙女的墓前立誓，收郭襄为义妹。郭襄四十岁那年大彻大悟，开创峨眉派。杨过与程英相守终老", mood: "bittersweet" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "yg-fork-3",
+        title: "襄阳城下的抉择",
+        description: "蒙古大军围攻襄阳，杨过携小龙女赶到。金轮法王挟持郭襄于高台之上，要挟郭靖投降。杨过面临抉择——",
+        age: "约三十六岁",
+        location: "襄阳城头",
+        canonChoiceId: "yg-fork-3-a",
+        choices: [
+          {
+            id: "yg-fork-3-a",
+            label: "救郭襄，击毙蒙哥",
+            isCanon: true,
+            summary: "原著路线：杨过冲上高台救郭襄，于万军之中击毙蒙古大汗蒙哥。",
+            outcomes: [
+              { title: "高台救美", description: "杨过冲上高台，以黯然销魂掌击败金轮法王，救下郭襄", consequence: "郭襄对他的爱慕更深一层，「风陵渡口初相遇，一见杨过误终身」成为谶语", mood: "glorious" },
+              { title: "击毙蒙哥", description: "杨过单骑冲入蒙古大军，于万军之中以飞石击毙蒙古大汗蒙哥", consequence: "蒙古大军群龙无首，退兵而去，襄阳之围暂解，杨过立下不世奇功", mood: "glorious" },
+              { title: "西狂归隐", description: "华山三论后，被推为「西狂」，携小龙女与神雕飘然而去", consequence: "从此绝迹江湖，唯留神雕侠侣的传说，为后人津津乐道", mood: "peaceful" },
+            ],
+          },
+          {
+            id: "yg-fork-3-b",
+            label: "事不关己，转身离去",
+            isCanon: false,
+            summary: "杨过想起郭芙断他一臂、郭靖夫妇送他入全真教受苦，心中有怨，袖手旁观。",
+            outcomes: [
+              { title: "襄阳城破", description: "杨过携小龙女离去，襄阳孤立无援，城破之日郭靖黄蓉殉国", consequence: "郭襄被金轮法王烧死在高台上，杨过听闻死讯后大悲，虽然后来创立黯然销魂掌，却永远活在愧疚中", mood: "tragic" },
+              { title: "剑魔再世", description: "杨过虽武功盖世，却因坐视襄阳城破，被天下人唾骂为「剑魔」，再无大侠之名", consequence: "他与小龙女虽然相守一生，午夜梦回，却总能听见襄阳城头郭襄撕心裂肺的呼救声，夜夜难眠", mood: "tragic" },
+            ],
+          },
+          {
+            id: "yg-fork-3-c",
+            label: "以此要挟，以郭芙换郭襄",
+            isCanon: false,
+            summary: "杨过要求郭靖黄蓉自断郭芙一臂偿他断臂之仇，他便救郭襄。",
+            outcomes: [
+              { title: "母女断臂", description: "黄蓉含泪砍下郭芙左臂，递与杨过", consequence: "杨过看着郭芙的断臂，忽然觉得空虚无比，大仇得报，却并未有半分快意。他救下郭襄，与小龙女飘然远去，终生不再踏足襄阳", mood: "tragic" },
+              { title: "郭芙之死", description: "郭芙不堪受辱，拔剑自刎", consequence: "耶律齐叛宋降蒙，率蒙古先锋攻破襄阳，郭靖黄蓉战死。杨过闻之，将玄铁重剑沉入长江，与小龙女隐居古墓，永不出世", mood: "tragic" },
+            ],
+          },
+        ],
+      },
+    ],
   },
   {
     id: 4,
@@ -186,6 +590,89 @@ export const characters: Character[] = [
         { title: "笑傲江湖", description: "将恒山掌门传与仪清，与任盈盈归隐西湖梅庄，从此逍遥自在，笑傲江湖", age: "约二十八岁", location: "西湖梅庄" },
       ],
     },
+    destinyForks: [
+      {
+        id: "lhc-fork-1",
+        title: "被逐出师门",
+        description: "岳不群当众宣布令狐冲偷辟邪剑谱、结交魔教，将他逐出师门。此刻，令狐冲面临人生最大的选择——",
+        age: "约二十六岁",
+        location: "华山",
+        canonChoiceId: "lhc-fork-1-a",
+        choices: [
+          {
+            id: "lhc-fork-1-a",
+            label: "一笑置之，浪迹江湖",
+            isCanon: true,
+            summary: "原著路线：令狐冲被逐出师门，心中虽痛，却未作辩解，从此浪迹江湖。",
+            outcomes: [
+              { title: "洛阳绿竹巷", description: "心灰意冷来到洛阳，于绿竹巷邂逅任盈盈，琴箫合奏，互生情愫", consequence: "得遇此生知己，虽然前路多舛，却有任盈盈相伴，苦亦甜", mood: "bittersweet" },
+              { title: "恒山掌门", description: "受定闲师太临终托孤，接任恒山派掌门，成为第一位男掌门", consequence: "虽非所愿，却担起了恒山一派的安危，亦师亦父，守护一众女弟子", mood: "glorious" },
+              { title: "笑傲江湖", description: "历经千难万险，终与任盈盈归隐西湖梅庄，琴箫合奏《笑傲江湖》", consequence: "功成名遂身退，逍遥自在，成为江湖中少有的圆满结局", mood: "peaceful" },
+            ],
+          },
+          {
+            id: "lhc-fork-1-b",
+            label: "据理力争，揭露伪善",
+            isCanon: false,
+            summary: "令狐冲当众揭露岳不群的伪善面目，拿出辟邪剑谱的证据。",
+            outcomes: [
+              { title: "师徒反目", description: "岳不群恼羞成怒，使出辟邪剑法欲杀令狐冲灭口", consequence: "令狐冲以独孤九剑险胜，刺瞎岳不群双眼，从此华山派分为两派，内讧不断", mood: "tragic" },
+              { title: "正邪不容", description: "虽然揭穿了岳不群，但正派人士皆不信他，魔教亦不信任他", consequence: "令狐冲孤身一人行走江湖，正邪皆不容，郁郁而终，临终前将独孤九剑剑谱刻于思过崖石壁", mood: "tragic" },
+            ],
+          },
+          {
+            id: "lhc-fork-1-c",
+            label: "低头认错，重回师门",
+            isCanon: false,
+            summary: "令狐冲跪下向师父师娘认错，发誓永不再与魔教中人来往，求重归华山门下。",
+            outcomes: [
+              { title: "重回华山", description: "岳不群假意原谅，实则暗中监视令狐冲，想从他口中套出独孤九剑的秘密", consequence: "令狐冲在华山度日如年，被当作工具使用，后发现师娘宁中则自尽，令狐冲终于觉醒，手刃岳不群后远走天涯", mood: "tragic" },
+              { title: "沦为棋子", description: "岳不群利用令狐冲的独孤九剑，扫清异己，一统五岳剑派", consequence: "令狐冲成为岳不群手中的一把刀，双手沾满鲜血，最终在五岳并派大典上被岳不群以毒酒赐死", mood: "tragic" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "lhc-fork-2",
+        title: "任我行邀他入教",
+        description: "任我行脱困后，力邀令狐冲加入日月神教，许以副教主之位，要他协助自己一统江湖。",
+        age: "约二十六岁",
+        location: "西湖梅庄",
+        canonChoiceId: "lhc-fork-2-a",
+        choices: [
+          {
+            id: "lhc-fork-2-a",
+            label: "婉言谢绝，不愿入教",
+            isCanon: true,
+            summary: "原著路线：令狐冲婉拒任我行的邀请，不愿被权势束缚，选择自由。",
+            outcomes: [
+              { title: "任我行暴毙", description: "任我行雄心勃勃欲一统江湖，却在华山之巅突然暴毙而亡", consequence: "日月神教大权旁落，向问天接任教主，江湖风波暂息，令狐冲如释重负", mood: "bittersweet" },
+              { title: "盈盈让位", description: "任盈盈将教主之位让与向问天，与令狐冲共结连理", consequence: "二人归隐西湖梅庄，每日琴箫合奏，不理江湖恩怨，逍遥自在", mood: "peaceful" },
+            ],
+          },
+          {
+            id: "lhc-fork-2-b",
+            label: "接受邀请，出任副教主",
+            isCanon: false,
+            summary: "令狐冲接受任我行的邀请，成为日月神教副教主。",
+            outcomes: [
+              { title: "魔教圣主", description: "令狐冲协助任我行扫平五岳剑派与少林武当，日月神教一统江湖", consequence: "任我行死后，令狐冲接任教主，成为武林至尊，却发现高处不胜寒，身边再无可信之人，纵有天下，又有何趣？", mood: "bittersweet" },
+              { title: "功高震主", description: "任我行忌惮令狐冲的武功与威望，在食物中下了三尸脑神丹", consequence: "令狐冲中毒后，任盈盈为救他，以死相逼任我行交出解药。父女反目，令狐冲与任盈盈双双殉情于梅庄地牢", mood: "tragic" },
+            ],
+          },
+          {
+            id: "lhc-fork-2-c",
+            label: "假意答应，伺机反叛",
+            isCanon: false,
+            summary: "令狐冲假意答应当副教主，暗中联络正道人士，欲里应外合覆灭日月神教。",
+            outcomes: [
+              { title: "两败俱伤", description: "令狐冲在黑木崖发难，与任我行决战，两败俱伤，同归于尽", consequence: "日月神教与正道两败俱伤，江湖陷入百年大乱，直到百余年后方兴未艾", mood: "tragic" },
+              { title: "任盈盈之死", description: "任盈盈发现令狐冲的阴谋，在决战之时挡在父亲与恋人之间，死于独孤九剑之下", consequence: "令狐冲抱着任盈盈的尸首跳下黑木崖，向问天收敛二人尸骨，将《笑傲江湖》曲谱埋于二人墓前", mood: "tragic" },
+            ],
+          },
+        ],
+      },
+    ],
   },
   {
     id: 5,
@@ -227,6 +714,89 @@ export const characters: Character[] = [
         { title: "辞官归隐", description: "将明教教主之位传与杨逍，与赵敏归隐蒙古，不问世事", age: "约二十二岁", location: "蒙古草原" },
       ],
     },
+    destinyForks: [
+      {
+        id: "zwj-fork-1",
+        title: "四女同舟何所望",
+        description: "灵蛇岛上，张无忌与赵敏、周芷若、小昭、殷离四女同舟。波涛汹涌之间，他心中暗问自己——此生究竟情归何处？",
+        age: "约二十一岁",
+        location: "东海灵蛇岛",
+        canonChoiceId: "zwj-fork-1-a",
+        choices: [
+          {
+            id: "zwj-fork-1-a",
+            label: "随遇而安，听天由命",
+            isCanon: true,
+            summary: "原著路线：张无忌性格优柔寡断，不愿伤害任何一人，最终选择了赵敏。",
+            outcomes: [
+              { title: "小昭远走", description: "小昭为救众人，被迫远赴波斯，成为波斯明教总教教主，二人永诀", consequence: "失去了最温柔体贴的小昭，成为张无忌心中永远的遗憾", mood: "bittersweet" },
+              { title: "濠州婚礼", description: "与周芷若于濠州大婚，婚礼之上赵敏以谢逊下落为由将他带走", consequence: "周芷若震怒，张敏二人从此势不两立，张无忌夹在中间左右为难", mood: "bittersweet" },
+              { title: "归隐蒙古", description: "一切尘埃落定后，终于承认自己心中最爱是赵敏，传位杨逍，与她归隐蒙古草原", consequence: "最终得了一人心，却也辜负了另外三人，此生再无相见", mood: "peaceful" },
+            ],
+          },
+          {
+            id: "zwj-fork-1-b",
+            label: "舍不下芷若，与她成婚",
+            isCanon: false,
+            summary: "张无忌感念汉水一饭之恩，又有义父谢逊之命，毅然选择周芷若为妻。",
+            outcomes: [
+              { title: "芷若黑化", description: "周芷若虽与张无忌成婚，但内心始终不安，怕他念及赵敏，暗中加害", consequence: "赵敏被周芷若设计害死，张无忌得知真相后悲痛欲绝，与芷若恩断义绝，终生不娶", mood: "tragic" },
+              { title: "白头偕老", description: "周芷若放下心中执念，与张无忌相守一生，夫妻和睦", consequence: "张无忌成为一代明君，周芷若为皇后，二人育有三子，皆成大器。然张无忌晚年仍会想起草原上的那个蒙古少女，一声叹息", mood: "bittersweet" },
+            ],
+          },
+          {
+            id: "zwj-fork-1-c",
+            label: "携四女归隐，一夫多妻",
+            isCanon: false,
+            summary: "张无忌效仿古人，纳四女为妻妾，一同归隐。",
+            outcomes: [
+              { title: "家宅不宁", description: "赵敏聪慧、周芷若深沉、小昭温柔、殷离痴情，四女争风吃醋，家无宁日", consequence: "张无忌每日周旋于四女之间，心力交瘁，终于三十岁那年悄然离家，不知所终，留下四女和一群孩子", mood: "tragic" },
+              { title: "其乐融融", description: "四女各安其位，赵敏主外事、周芷若主内、小昭主医、殷离主武，一家人和和美美", consequence: "张无忌成为人生赢家，十个儿女长大成人，开创武林张家，成为江湖第一大家族", mood: "peaceful" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "zwj-fork-2",
+        title: "明教教主与天下",
+        description: "张无忌率领明教群雄，已成气候，麾下百万之众，足以推翻元朝，自立为帝。他站在濠州城头，望着城下旌旗猎猎——",
+        age: "约二十二岁",
+        location: "濠州",
+        canonChoiceId: "zwj-fork-2-a",
+        choices: [
+          {
+            id: "zwj-fork-2-a",
+            label: "传位杨逍，功成身退",
+            isCanon: true,
+            summary: "原著路线：张无忌不愿做皇帝，将教主之位传与杨逍，与赵敏归隐。",
+            outcomes: [
+              { title: "朱元障开国", description: "张无忌归隐后，朱元障逐渐掌握实权，推翻元朝，建立大明，登基为帝", consequence: "明朝建立，汉人江山恢复，而张无忌之名逐渐被淡忘，唯留明教中人记得那少年教主", mood: "bittersweet" },
+              { title: "兔死狗烹", description: "朱元璋登基后，忌惮明教旧部，大肆屠戮，明教逐渐式微", consequence: "张无忌在蒙古闻之，虽有心相救，却已无力回天，唯有一声长叹", mood: "tragic" },
+            ],
+          },
+          {
+            id: "zwj-fork-2-b",
+            label: "登基为帝，建立新朝",
+            isCanon: false,
+            summary: "张无忌在众人拥戴下，自立为帝，国号「明」。",
+            outcomes: [
+              { title: "汉家河山", description: "张无忌登基为帝，以赵敏为皇后，恢复汉家衣冠，轻徭薄赋，与民休息", consequence: "开创三十年盛世，史称「明武中兴」，张无忌成为一代明君，名垂青史", mood: "glorious" },
+              { title: "后宫干政", description: "赵敏以蒙古皇后之尊干政，重用蒙古旧部，朝中汉蒙两党纷争不断", consequence: "张无忌左右为难，朝政日非，在位十年后心力交瘁，禅位给太子，携赵敏归隐，不知所终", mood: "bittersweet" },
+            ],
+          },
+          {
+            id: "zwj-fork-2-c",
+            label: "扶持明教，宗教治国",
+            isCanon: false,
+            summary: "张无忌将明教定为国教，以明教教义治理天下。",
+            outcomes: [
+              { title: "政教合一", description: "明教成为国教，张无忌既是皇帝又是教主，大权独揽", consequence: "然而宗教治国带来无穷弊端，反对者此起彼伏，终在张无忌死后天下大乱，明王朝只延续了三代便告灭亡", mood: "tragic" },
+              { title: "少林武当反目", description: "少林武当等名门正派不服明教治国，发动「灭魔之战」，江湖腥风血雨", consequence: "张无忌亲自率军攻上武当山，亲手击杀了太师叔祖张三丰，终在张三丰的尸体前大彻大悟，自刎而亡", mood: "tragic" },
+            ],
+          },
+        ],
+      },
+    ],
   },
   {
     id: 6,

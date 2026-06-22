@@ -1,13 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import { Character, CharacterJourney, TimelineEvent } from "@/data/characters";
-import { ArrowLeft, Sparkles, Heart, Swords, Scroll as ScrollIcon, Star, X } from "lucide-react";
+import { ArrowLeft, Sparkles, Heart, Swords, Scroll as ScrollIcon, Star, X, GitBranch } from "lucide-react";
+import DestinyForkTree from "@/components/DestinyForkTree";
 
 interface DestinyScrollProps {
   character: Character;
   onBack: () => void;
 }
 
-type DimensionKey = keyof CharacterJourney;
+type DimensionKey = keyof CharacterJourney | "forks";
 
 const dimensions: {
   key: DimensionKey;
@@ -20,6 +21,7 @@ const dimensions: {
   { key: "emotion", label: "情感", icon: Heart, description: "爱恨纠缠" },
   { key: "martial", label: "武学", icon: Swords, description: "绝技留名" },
   { key: "ending", label: "结局", icon: ScrollIcon, description: "功过留名" },
+  { key: "forks", label: "命运分叉", icon: GitBranch, description: "人生抉择" },
 ];
 
 function ScrollRod({ position }: { position: "left" | "right" }) {
@@ -105,7 +107,8 @@ export default function DestinyScroll({ character, onBack }: DestinyScrollProps)
   }, [activeDimension]);
 
   const currentDim = dimensions.find((d) => d.key === activeDimension)!;
-  const events = character.journey[activeDimension];
+  const isForkDimension = activeDimension === "forks";
+  const events = isForkDimension ? [] : character.journey[activeDimension as keyof CharacterJourney];
   const Icon = currentDim.icon;
 
   return (
@@ -208,7 +211,7 @@ export default function DestinyScroll({ character, onBack }: DestinyScrollProps)
 
               <div className="mb-8">
                 <div className="flex flex-wrap gap-2 md:gap-3 justify-center">
-                  {dimensions.map((dim, idx) => {
+                  {dimensions.map((dim) => {
                     const DimIcon = dim.icon;
                     const isActive = dim.key === activeDimension;
                     return (
@@ -252,32 +255,41 @@ export default function DestinyScroll({ character, onBack }: DestinyScrollProps)
 
               <div className="page-turn-in overflow-hidden" key={pageKey}>
                 <div ref={contentRef} className="max-h-[60vh] overflow-y-auto pr-2 scrollbar-hide">
-                  <div className="flex items-center gap-3 mb-6 pb-3 border-b-2 border-double border-[#8b5a2b]/30">
-                    <div className="relative">
-                      <div className="w-10 h-10 md:w-12 md:h-12 rounded-full dimension-pill-active flex items-center justify-center">
-                        <Icon size={20} className="text-[#c23616]" />
+                  {isForkDimension && character.destinyForks ? (
+                    <DestinyForkTree
+                      forks={character.destinyForks}
+                      characterName={character.name}
+                    />
+                  ) : (
+                    <>
+                      <div className="flex items-center gap-3 mb-6 pb-3 border-b-2 border-double border-[#8b5a2b]/30">
+                        <div className="relative">
+                          <div className="w-10 h-10 md:w-12 md:h-12 rounded-full dimension-pill-active flex items-center justify-center">
+                            <Icon size={20} className="text-[#c23616]" />
+                          </div>
+                        </div>
+                        <div>
+                          <h2 className="font-brush text-3xl md:text-4xl ink-title-on-paper tracking-wider">
+                            {currentDim.label}
+                          </h2>
+                          <div className="font-song text-xs md:text-sm ink-text-on-paper/50 mt-0.5">
+                            ─── {currentDim.description} · 共 {events.length} 章 ───
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                    <div>
-                      <h2 className="font-brush text-3xl md:text-4xl ink-title-on-paper tracking-wider">
-                        {currentDim.label}
-                      </h2>
-                      <div className="font-song text-xs md:text-sm ink-text-on-paper/50 mt-0.5">
-                        ─── {currentDim.description} · 共 {events.length} 章 ───
-                      </div>
-                    </div>
-                  </div>
 
-                  <div className="space-y-0 pl-2 md:pl-4">
-                    {events.map((event, index) => (
-                      <TimelineNode
-                        key={`${activeDimension}-${index}-${pageKey}`}
-                        event={event}
-                        index={index}
-                        total={events.length}
-                      />
-                    ))}
-                  </div>
+                      <div className="space-y-0 pl-2 md:pl-4">
+                        {events.map((event, index) => (
+                          <TimelineNode
+                            key={`${activeDimension}-${index}-${pageKey}`}
+                            event={event}
+                            index={index}
+                            total={events.length}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
 
