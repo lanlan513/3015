@@ -25,41 +25,41 @@ const moodConfig = {
   tragic: {
     icon: Skull,
     label: "悲情",
-    color: "text-[#8b2010]",
-    bg: "bg-[#8b2010]/10",
-    border: "border-[#8b2010]/30",
+    color: "text-[#7a1808]",
+    bg: "bg-[#8b2010]/12",
+    border: "border-[#8b2010]/40",
     glow: "shadow-[#8b2010]/20",
   },
   bittersweet: {
     icon: Sunset,
     label: "苦乐参半",
-    color: "text-[#8b6914]",
-    bg: "bg-[#b8860b]/10",
-    border: "border-[#b8860b]/30",
+    color: "text-[#6b5010]",
+    bg: "bg-[#b8860b]/15",
+    border: "border-[#b8860b]/45",
     glow: "shadow-[#b8860b]/20",
   },
   peaceful: {
     icon: Cloud,
     label: "归隐",
-    color: "text-[#2c5f8b]",
-    bg: "bg-[#2c3e6b]/10",
-    border: "border-[#2c3e6b]/30",
+    color: "text-[#1a3f6b]",
+    bg: "bg-[#2c3e6b]/12",
+    border: "border-[#2c3e6b]/40",
     glow: "shadow-[#2c3e6b]/20",
   },
   glorious: {
     icon: Crown,
     label: "辉煌",
-    color: "text-[#8b5a0b]",
-    bg: "bg-[#b8860b]/15",
-    border: "border-[#b8860b]/40",
+    color: "text-[#6b4508]",
+    bg: "bg-[#b8860b]/20",
+    border: "border-[#b8860b]/55",
     glow: "shadow-[#b8860b]/30",
   },
   mundane: {
     icon: Coffee,
     label: "平淡",
-    color: "text-[#5a5a5a]",
-    bg: "bg-[#5a5a5a]/10",
-    border: "border-[#5a5a5a]/30",
+    color: "text-[#3d3d3d]",
+    bg: "bg-[#5a5a5a]/12",
+    border: "border-[#5a5a5a]/40",
     glow: "shadow-[#5a5a5a]/20",
   },
 };
@@ -90,8 +90,8 @@ function ForkNode({
       onClick={onClick}
       className={`relative w-full md:w-[calc(33.333%-1rem)] p-4 rounded-lg border-2 transition-all duration-500 text-left ${
         isActive
-          ? "border-[#c23616] bg-[#c23616]/10 shadow-lg shadow-[#c23616]/20 -translate-y-1"
-          : "border-[#8b5a2b]/30 bg-[#f5f0e8]/50 hover:border-[#c23616]/50 hover:bg-[#f5f0e8]/80"
+          ? "border-[#c23616] bg-[#fff0eb] shadow-lg shadow-[#c23616]/25 -translate-y-1"
+          : "border-[#8b5a2b]/50 bg-[#faf5eb] hover:border-[#c23616]/60 hover:bg-[#fdf8f2]"
       } ${positionClasses[position]} group`}
     >
       {isCanon && (
@@ -104,23 +104,23 @@ function ForkNode({
       <div className="flex items-start gap-3">
         <div
           className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-            isActive ? "bg-[#c23616]/20" : "bg-[#8b5a2b]/10"
+            isActive ? "bg-[#c23616]/20" : "bg-[#8b5a2b]/15"
           }`}
         >
           <GitBranch
             size={20}
-            className={isActive ? "text-[#c23616]" : "text-[#8b5a2b]"}
+            className={isActive ? "text-[#a02a10]" : "text-[#6b4a20]"}
           />
         </div>
         <div className="flex-1 min-w-0">
           <h4
             className={`font-brush text-lg mb-1 ${
-              isActive ? "text-[#c23616]" : "ink-title-on-paper"
+              isActive ? "text-[#a02a10]" : "text-[#1a0f08]"
             }`}
           >
             {fork.label}
           </h4>
-          <p className="font-song text-xs ink-text-on-paper/60 line-clamp-2">
+          <p className="font-song text-xs text-[#3d2817] line-clamp-2">
             {fork.summary}
           </p>
         </div>
@@ -153,26 +153,26 @@ function OutcomeCard({ outcome }: { outcome: ForkOutcome }) {
           <MoodIcon size={16} className={mood.color} />
         </div>
         <div>
-          <h5 className="font-brush text-base ink-title-on-paper">
+          <h5 className="font-brush text-base text-[#1a0f08]">
             {outcome.title}
           </h5>
-          <span className={`text-[10px] font-song ${mood.color}`}>
+          <span className={`text-[10px] font-song font-semibold ${mood.color}`}>
             {mood.label}
           </span>
         </div>
         {outcome.age && (
-          <span className="ml-auto text-[10px] px-2 py-0.5 rounded bg-[#2c3e6b]/10 text-[#2c3e6b] font-song">
+          <span className="ml-auto text-[10px] px-2 py-0.5 rounded bg-[#2c3e6b]/15 text-[#1a2540] font-song font-medium">
             {outcome.age}
           </span>
         )}
       </div>
-      <p className="font-song text-sm ink-text-on-paper/75 leading-relaxed mb-3">
+      <p className="font-song text-sm text-[#2c1810] leading-relaxed mb-3">
         {outcome.description}
       </p>
-      <div className="pt-3 border-t border-[#8b5a2b]/20">
+      <div className="pt-3 border-t border-[#8b5a2b]/30">
         <div className="flex items-start gap-2">
-          <span className="text-xs text-[#c23616] font-brush">代价：</span>
-          <p className="font-song text-xs ink-text-on-paper/60 italic">
+          <span className="text-xs text-[#a02a10] font-brush font-bold">代价：</span>
+          <p className="font-song text-xs text-[#3d2817] italic">
             {outcome.consequence}
           </p>
         </div>
@@ -231,8 +231,19 @@ export default function DestinyForkTree({
   };
 
   const handleShowCanon = () => {
-    setPathHistory([]);
-    setCurrentForkIndex(0);
+    const canonHistory = [];
+    for (let i = 0; i < currentForkIndex; i++) {
+      const fork = forks[i];
+      const canonChoice = fork.choices.find((c) => c.id === fork.canonChoiceId);
+      if (canonChoice) {
+        canonHistory.push({
+          forkId: fork.id,
+          choiceId: canonChoice.id,
+          choiceLabel: canonChoice.label,
+        });
+      }
+    }
+    setPathHistory(canonHistory);
     setSelectedChoiceId(currentFork.canonChoiceId);
   };
 
@@ -243,9 +254,9 @@ export default function DestinyForkTree({
     <div className="relative">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
-          <TreeDeciduous size={20} className="text-[#c23616]" />
-          <h3 className="font-brush text-2xl ink-title-on-paper">命运分叉</h3>
-          <span className="text-sm text-[#8b5a2b]/60 font-song">
+          <TreeDeciduous size={20} className="text-[#a02a10]" />
+          <h3 className="font-brush text-2xl md:text-3xl text-[#1a0f08]">命运分叉</h3>
+          <span className="text-sm text-[#5a3d10] font-song font-medium">
             第 {currentForkIndex + 1} / {forks.length} 个抉择
           </span>
         </div>
@@ -268,14 +279,14 @@ export default function DestinyForkTree({
       </div>
 
       {pathHistory.length > 0 && (
-        <div className="mb-4 p-3 bg-[#b8860b]/5 border border-[#b8860b]/20 rounded-lg">
-          <div className="flex items-center gap-2 text-xs font-song ink-text-on-paper/60 flex-wrap">
-            <span className="text-[#8b6914]">已选路径：</span>
+        <div className="mb-4 p-3 bg-[#fff8e7] border border-[#b8860b]/35 rounded-lg">
+          <div className="flex items-center gap-2 text-xs font-song text-[#3d2817] flex-wrap">
+            <span className="text-[#6b4508] font-semibold">已选路径：</span>
             {pathHistory.map((item, idx) => (
               <span key={idx} className="flex items-center gap-1">
-                <span className="text-[#8b5a2b]">{item.choiceLabel}</span>
+                <span className="text-[#5a3d10] font-medium">{item.choiceLabel}</span>
                 {idx < pathHistory.length - 1 && (
-                  <ArrowRight size={12} className="text-[#8b5a2b]/40" />
+                  <ArrowRight size={12} className="text-[#8b5a2b]/60" />
                 )}
               </span>
             ))}
@@ -283,39 +294,39 @@ export default function DestinyForkTree({
         </div>
       )}
 
-      <div className="relative mb-6 p-5 md:p-6 bg-[#f5f0e8]/60 rounded-lg border-2 border-[#8b5a2b]/30">
-        <div className="absolute -top-3 left-4 px-2 bg-[#f5f0e8]">
-          <span className="font-brush text-sm text-[#c23616]">
+      <div className="relative mb-6 p-5 md:p-6 bg-[#faf5eb] rounded-lg border-2 border-[#8b5a2b]/40">
+        <div className="absolute -top-3 left-4 px-2 bg-[#faf5eb]">
+          <span className="font-brush text-sm text-[#a02a10] font-semibold">
             第 {currentForkIndex + 1} 难
           </span>
         </div>
         <div className="flex flex-wrap items-center gap-2 mb-3">
-          <h4 className="font-brush text-xl md:text-2xl ink-title-on-paper">
+          <h4 className="font-brush text-xl md:text-2xl text-[#1a0f08]">
             {currentFork.title}
           </h4>
           {currentFork.age && (
-            <span className="text-[10px] md:text-xs px-2 py-0.5 rounded border border-[#2c3e6b]/30 bg-[#2c3e6b]/5 text-[#2c3e6b] font-song">
+            <span className="text-[10px] md:text-xs px-2 py-0.5 rounded border border-[#2c3e6b]/40 bg-[#2c3e6b]/10 text-[#1a2540] font-song font-medium">
               {currentFork.age}
             </span>
           )}
           {currentFork.location && (
-            <span className="text-[10px] md:text-xs px-2 py-0.5 rounded border border-[#b8860b]/40 bg-[#b8860b]/5 text-[#8b6914] font-song">
+            <span className="text-[10px] md:text-xs px-2 py-0.5 rounded border border-[#b8860b]/50 bg-[#b8860b]/10 text-[#6b4508] font-song font-medium">
               📍 {currentFork.location}
             </span>
           )}
         </div>
-        <p className="font-song text-sm md:text-base ink-text-on-paper/75 leading-relaxed">
+        <p className="font-song text-sm md:text-base text-[#2c1810] leading-relaxed">
           {currentFork.description}
         </p>
       </div>
 
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-3">
-          <GitBranch size={16} className="text-[#8b5a2b]" />
-          <span className="font-brush text-base ink-title-on-paper">
+          <GitBranch size={16} className="text-[#6b4a20]" />
+          <span className="font-brush text-lg text-[#1a0f08]">
             命运分支
           </span>
-          <span className="text-xs text-[#8b5a2b]/50 font-song">
+          <span className="text-xs text-[#5a3d10] font-song">
             点击选择一条人生道路
           </span>
         </div>
@@ -344,10 +355,10 @@ export default function DestinyForkTree({
         <div className="mb-6 animate-fade-in-up">
           <div className="flex items-center gap-2 mb-3">
             <Sparkles size={16} className="text-[#c23616]" />
-            <span className="font-brush text-base ink-title-on-paper">
+            <span className="font-brush text-lg text-[#1a0f08]">
               此路结局
             </span>
-            <span className="text-xs text-[#8b5a2b]/50 font-song">
+            <span className="text-xs text-[#5a3d10] font-song">
               — {selectedChoice.label} 的人生走向 —
             </span>
           </div>
@@ -403,17 +414,17 @@ export default function DestinyForkTree({
       </div>
 
       {isLastFork && selectedChoiceId && (
-        <div className="mt-6 p-4 bg-[#b8860b]/10 border-2 border-[#b8860b]/30 rounded-lg text-center animate-fade-in-up">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <Star size={20} className="text-[#b8860b]" />
-            <span className="font-brush text-xl text-[#8b6914]">
+        <div className="mt-6 p-5 bg-[#fff8e7] border-2 border-[#b8860b]/50 rounded-lg text-center animate-fade-in-up shadow-md shadow-[#b8860b]/10">
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <Star size={22} className="text-[#8b5a0b] fill-[#b8860b]/20" />
+            <span className="font-brush text-2xl text-[#6b4a08]">
               人生终局
             </span>
-            <Star size={20} className="text-[#b8860b]" />
+            <Star size={22} className="text-[#8b5a0b] fill-[#b8860b]/20" />
           </div>
-          <p className="font-song text-sm ink-text-on-paper/70">
-            此乃{characterName}
-            选择「{selectedChoice?.label}」后的人生归宿。江湖路远，每一个选择，都铸就了不同的命运。
+          <p className="font-song text-sm md:text-base text-[#2c1810] leading-relaxed">
+            此乃<span className="text-[#8b5a0b] font-bold">{characterName}</span>
+            选择「<span className="text-[#a02a10] font-brush">{selectedChoice?.label}</span>」后的人生归宿。江湖路远，每一个选择，都铸就了不同的命运。
           </p>
         </div>
       )}
